@@ -3,15 +3,13 @@
  * Created on Aug, 23th 2023
  * Author: Tiago Barros
  * Based on "From C to C++ course - 2002"
- */
+*/
 
 #include <string.h>
-#include <stdio.h>
 
-#include "keyboard.h"
 #include "screen.h"
+#include "keyboard.h"
 #include "timer.h"
-//a
 
 int x = 34, y = 12;
 int incX = 1, incY = 1;
@@ -35,11 +33,9 @@ void printKey(int ch)
 
     screenGotoxy(34, 23);
     printf("            ");
-
-    if (ch == 27)
-        screenGotoxy(36, 23);
-    else
-        screenGotoxy(39, 23);
+    
+    if (ch == 27) screenGotoxy(36, 23);
+    else screenGotoxy(39, 23);
 
     printf("%d ", ch);
     while (keyhit())
@@ -48,7 +44,7 @@ void printKey(int ch)
     }
 }
 
-int main()
+int main() 
 {
     static int ch = 0;
 
@@ -59,10 +55,10 @@ int main()
     printHello(x, y);
     screenUpdate();
 
-    while (ch != 10) // enter
+    while (ch != 10) //enter
     {
         // Handle user input
-        if (keyhit())
+        if (keyhit()) 
         {
             ch = readch();
             printKey(ch);
@@ -73,11 +69,9 @@ int main()
         if (timerTimeOver() == 1)
         {
             int newX = x + incX;
-            if (newX >= (MAXX - strlen("Hello World") - 1) || newX <= MINX + 1)
-                incX = -incX;
+            if (newX >= (MAXX -strlen("Hello World") -1) || newX <= MINX+1) incX = -incX;
             int newY = y + incY;
-            if (newY >= MAXY - 1 || newY <= MINY + 1)
-                incY = -incY;
+            if (newY >= MAXY-1 || newY <= MINY+1) incY = -incY;
 
             printKey(ch);
             printHello(newX, newY);

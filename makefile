@@ -1,8 +1,8 @@
 all:
-	gcc main.c ./src/*.c -I include -o main.exe
+	gcc main.c ./src/*.c -I include -o kenshin
 
 run:
-	./main.exe
+	./kenshin
 
 clean:
-	rm main.exe
+	rm kenshin

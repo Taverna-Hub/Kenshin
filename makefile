@@ -1,5 +1,5 @@
 all:
-	gcc main.c ./src/*.c -I include -o kenshin.out
+	gcc ./src/*.c -I include -o kenshin.out
 
 run:
 	./kenshin.out

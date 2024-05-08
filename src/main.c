@@ -23,6 +23,57 @@
         "   |=|\n"
         "    |\n"
         "   / \\"; */
+
+
+
+        #define PERNAESQ "/"
+#define PERNADIR "|"
+#define TRONCO "|="
+#define CABECA "@"
+struct espada
+{
+    int posic_lamina;
+    int posic_bainha;
+};
+
+typedef struct jogador
+{
+    int posicao;
+    int vidaTotal;
+    struct espada katana;
+} jogador;
+
+void VidaBlue(jogador *blue)
+{   
+    int hpBlue = 5;
+    blue->vidaTotal = hpBlue;
+    return blue->vidaTotal;
+}
+void VidaRed(jogador *red)
+{
+    int hpRed = 5;
+    red->vidaTotal = hpRed;
+    return red->vidaTotal;
+}
+
+void Combate(char atkBlue, char atkRed, int posicaoBlue, int posicaoRed, char defBlue, char defRed, jogador *blue, jogador *red)
+{
+    if (posicaoBlue = posicaoRed + 1) // se azul tiver no alcançe com distancia de 1 do referencial da cabeca "@"
+    {
+        if (atkBlue) // se azul atacar
+        {
+            if (defRed) // se vermelho defender
+            {
+                VidaRed(red);
+                red->vidaTotal -= 0; // perde 0hp
+            }
+            VidaRed(red);
+            red->vidaTotal--; // perde 1hp
+        }
+    }
+    printf("Errou Ataque");
+}
+
     
   void printObject(int x, int y, const char *emoji) {
     screenGotoxy(x, y);  
@@ -39,8 +90,8 @@ void updatePlayer(int *x, int *y, int dx, char *emoji) {
 
     int main() {
         int ch = 0;
-        int player1X = 34, player1Y = 15;
-        int player2X = 50, player2Y = 15;
+        int player1X = 34, player1Y = 18;
+        int player2X = 50, player2Y = 18;
         int player1Health = 100;
         int player2Health = 100;
         int player1State = 0; 
@@ -72,11 +123,13 @@ void updatePlayer(int *x, int *y, int dx, char *emoji) {
             }
 
             if (timerTimeOver()==1) {
+                printObject(player1X,player1Y,playerEmoji);
+                printObject(player2X,player2Y,playerEmoji);
                 screenGotoxy(10, 5);
                 printf("Player 1 Health: %d", player1Health);
                 screenGotoxy(50, 5);
                 printf("Player 2 Health: %d", player2Health);
-
+                
                 if (player1Health <= 0) {
                     printf("Player 1 has died. Game over.\n");
                     break;

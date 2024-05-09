@@ -27,7 +27,7 @@
 
 
         #define PERNAESQ "/"
-#define PERNADIR "|"
+#define PERNADIR "\"
 #define TRONCO "|="
 #define CABECA "@"
 struct espada
@@ -75,7 +75,7 @@ void Combate(char atkBlue, char atkRed, int posicaoBlue, int posicaoRed, char de
 }
 
     
-  void printObject(int x, int y, const char *emoji) {
+  void printObject(int x, int y,  char *emoji) {
     screenGotoxy(x, y);  
     printf("%s", emoji);  
     screenUpdate();  
@@ -111,7 +111,7 @@ void updatePlayer(int *x, int *y, int dx, char *emoji) {
                     updatePlayer(&player1X, &player1Y, -1,playerEmoji);
                 } else if (ch == 100) { // 'd' move right
                     updatePlayer(&player1X, &player1Y, 1,playerEmoji);
-                } else if (ch == 113) { // 'q' player 1 attack
+                } else if (ch == 113 && player1X-player2X==2) { // 'q' player 1 attack
                     player2Health -= 10;
                 } else if (ch == 117) { // 'u' player 2 attack
                     player1Health -= 10;

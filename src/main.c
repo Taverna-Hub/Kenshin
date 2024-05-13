@@ -8,46 +8,46 @@
 
 #define SPRITE_HEIGHT_ALL 4
 
-#define SPRITE_BASE_BLUE 6
-#define SPRITE_ATTACK_BLUE 9
-#define SPRITE_DEFENSE_BLUE 5
+#define SPRITE_WIDTH_BASE_BLUE 6
+#define SPRITE_WIDTH_ATTACK_BLUE 9
+#define SPRITE_WIDTH_DEFENSE_BLUE 5
 
-#define SPRITE_BASE_RED 5
-#define SPRITE_ATTACK_RED 8
-#define SPRITE_DEFENSE_RED 4
+#define SPRITE_WIDTH_BASE_RED 5
+#define SPRITE_WIDTH_ATTACK_RED 8
+#define SPRITE_WIDTH_DEFENSE_RED 4
 
 // Posturas Base
-char basePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_BASE_BLUE] = {
+char basePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_BASE_BLUE] = {
     "  @  /",
     "  |=/",
     " /\\",
     "/ |",
 };
-char basePostureRed[SPRITE_HEIGHT_ALL][SPRITE_BASE_RED] = {
+char basePostureRed[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_BASE_RED] = {
     "\\  @",
     " \\=|",
     "   /\\",
     "  |  \\"};
 
 // Posturas Ataque
-char AttackPostureBlue[SPRITE_HEIGHT_ALL][SPRITE_ATTACK_BLUE] = {
+char AttackPostureBlue[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_ATTACK_BLUE] = {
     "  @",
     "  |=-*---",
     " /\\",
     "/  |"};
-char AttackPostureRed[SPRITE_HEIGHT_ALL][SPRITE_ATTACK_RED] = {
+char AttackPostureRed[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_ATTACK_RED] = {
     "      @",
     "---*-=|",
     "     /\\",
     "    |  \\"};
 
 // Posturas Defesa
-char DefensePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_DEFENSE_BLUE] = {
+char DefensePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_DEFENSE_BLUE] = {
     "  @ |",
     "  |=|",
     " /\\",
     "/ |"};
-char DefensePostureRed[SPRITE_HEIGHT_ALL][SPRITE_DEFENSE_RED] = {
+char DefensePostureRed[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_DEFENSE_RED] = {
     "| @",
     "|=|",
     " /\\",

@@ -175,6 +175,15 @@ void jogador2PosturaBase()
         printf("\n");
     }
 }
+#define SPRITE_WIDTH 7
+#define SPRITE_HEIGHT 4
+
+char baseSprite[SPRITE_HEIGHT][SPRITE_WIDTH+1] = { 
+    "   @  /",
+    "  |=/  ",
+    " /     ",
+    "/ |    "
+};
 void jogador2PosturaAtaque()
 {
     /*
@@ -226,19 +235,26 @@ void jogador2PosturaDefesa()
         printf("\n");
     }
 }
-void printObject(int x, int y, const char *emoji)
-{
-    screenGotoxy(x, y);
-    printf("%s", emoji);
+void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH+1]) {
+    for (int i = 0; i < SPRITE_HEIGHT; i++) {
+        screenGotoxy(x, y + i);
+        printf("%s", sprite[i]);
+    }
     screenUpdate();
 }
+void clearSprite(int x, int y, int width, int height) {
+    for (int i = 0; i < height; i++) {
+        screenGotoxy(x, y + i);
+        for (int j = 0; j < width; j++) {
+            printf(" ");
+        }
+    }
+}
 
-void updatePlayer(int *x, int *y, int dx, char *emoji)
-{
-    screenGotoxy(*x, *y);
-    printf(" ");
+void updatePlayer(int *x, int *y, int dx, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH+1]) {
+    clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     *x += dx;
-    printObject(*x, *y, emoji);
+    printSprite(*x, *y, sprite);
 }
 
 int main()
@@ -267,11 +283,11 @@ int main()
             }
             else if (ch == 97)
             { // 'a' move left
-                updatePlayer(&player1X, &player1Y, -1, playerEmoji);
+                updatePlayer(&player1X, &player1Y, -1, baseSprite);
             }
             else if (ch == 100)
             { // 'd' move right
-                updatePlayer(&player1X, &player1Y, 1, playerEmoji);
+                updatePlayer(&player1X, &player1Y, 1, baseSprite);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
@@ -283,18 +299,18 @@ int main()
             }
             else if (ch == 106)
             { // 'j' move left
-                updatePlayer(&player2X, &player2Y, -1, playerEmoji);
+                updatePlayer(&player2X, &player2Y, -1, baseSprite);
             }
             else if (ch == 108)
             { // 'l' move right
-                updatePlayer(&player2X, &player2Y, 1, playerEmoji);
+                updatePlayer(&player2X, &player2Y, 1, baseSprite);
             }
         }
 
         if (timerTimeOver() == 1)
         {
-            printObject(player1X, player1Y, playerEmoji);
-            printObject(player2X, player2Y, playerEmoji);
+            printSprite(player1X, player1Y, baseSprite);
+            printSprite(player2X, player2Y, baseSprite);
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
             screenGotoxy(50, 5);

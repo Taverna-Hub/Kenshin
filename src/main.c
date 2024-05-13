@@ -6,48 +6,53 @@
 #include "keyboard.h"
 #include "timer.h"
 
-<<<<<<< HEAD
-#define SPRITE_HEIGHT 4
+#define SPRITE_HEIGHT_ALL 4
 
-char basePostureBlue[SPRITE_HEIGHT][6] = {
+#define SPRITE_BASE_BLUE 6
+#define SPRITE_ATTACK_BLUE 9
+#define SPRITE_DEFENSE_BLUE 5
+
+#define SPRITE_BASE_RED 5
+#define SPRITE_ATTACK_RED 8
+#define SPRITE_DEFENSE_RED 4
+
+// Posturas Base
+char basePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_BASE_BLUE] = {
     "  @  /",
     "  |=/",
     " /\\",
     "/ |",
 };
-
-char basePostureRed[SPRITE_HEIGHT][5] = {
+char basePostureRed[SPRITE_HEIGHT_ALL][SPRITE_BASE_RED] = {
     "\\  @",
-    " \\=||",
+    " \\=|",
     "   /\\",
-    "  ||  \\"};
+    "  |  \\"};
 
-char AttackPostureBlue[SPRITE_HEIGHT][9] = {
+// Posturas Ataque
+char AttackPostureBlue[SPRITE_HEIGHT_ALL][SPRITE_ATTACK_BLUE] = {
+    "  @",
+    "  |=-*---",
+    " /\\",
+    "/  |"};
+char AttackPostureRed[SPRITE_HEIGHT_ALL][SPRITE_ATTACK_RED] = {
+    "      @",
+    "---*-=|",
+    "     /\\",
+    "    |  \\"};
 
-};
-=======
-/*
-        baseSprite
-       1   @  /                  \  @1
-       2   |=/                    \=|2
-       3  /                        / 3
-       4/  |                     / | 4
-        0123456                  0123  
-        attackSprite
-       1   @                        @1
-       2   |=-*---            ---*-=|2
-       3  /                        / 3
-       4/  |                     / | 4
-        0123456789            0123456
-        defenseSprite
-       1   @ |                  |  @1
-       2   |=|                  |==|2
-       3   |                   / 3
-       4  /\                   / | 4
-        0123456                 0123
-      */
+// Posturas Defesa
+char DefensePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_DEFENSE_BLUE] = {
+    "  @ |",
+    "  |=|",
+    " /\\",
+    "/ |"};
+char DefensePostureRed[SPRITE_HEIGHT_ALL][SPRITE_DEFENSE_RED] = {
+    "| @",
+    "|=|",
+    " /\\",
+    "|  \\"};
 
->>>>>>> 7b91c037bbc714de3e576bfd06f026cfd1cc378a
 struct espada
 {
     int posic_lamina;
@@ -74,6 +79,7 @@ void VidaRed(jogador *red)
 }
 
 void Combate(char atkBlue, char atkRed, int posicaoBlue, int posicaoRed, char defBlue, char defRed, jogador *blue, jogador *red)
+
 {
     if (posicaoBlue = posicaoRed + 1) // se azul tiver no alcançe com distancia de 1 do referencial da cabeca "@"
     {
@@ -91,189 +97,19 @@ void Combate(char atkBlue, char atkRed, int posicaoBlue, int posicaoRed, char de
     printf("Errou Ataque");
 }
 
-void jogador1PosturaBase()
+void printObject(int x, int y, const char *emoji)
 {
-    /*
-            baseSprite1
-                            @   /1
-                            |=/  2
-                           /\    3
-                         /  |    4
-                         12345678
-    */
-    char jogador[4][6] = {
-        {' ', ' ', '@', ' ', ' ', '/'},
-        {' ', ' ', '||', '=', '/', ' '},
-        {' ', '/', '\\', ' ', ' ', ' '},
-        {'/', ' ', '|', ' ', ' ', ' '}};
-
-    for (int x = 0; x < 4; x++)
-    {
-        for (int y = 0; y < 6; y++)
-        {
-            printf("%c", jogador[x][y]);
-        }
-        printf("\n");
-    }
-}
-void jogador1PosturaAtaque()
-{
-    /*
-            attackSprite1
-                               @      1
-                               |=-*---2
-                              /\      3
-                            /  |      4
-                            0123456789
-    */
-    char jogador[4][9] = {
-        {' ', ' ', '@', ' ', ' ', ' ', ' ', ' ', ' '},
-        {' ', ' ', '||', '=', '-', '*', '-', '-', '-'},
-        {' ', '/', ' \\', ' ', ' ', ' ', ' ', ' ', ' '},
-        {'/', ' ', '||', ' ', ' ', ' ', ' ', ' ', ' '}};
-
-    for (int x = 0; x < 4; x++)
-    {
-        for (int y = 0; y < 9; y++)
-        {
-            printf("%c", jogador[x][y]);
-        }
-        printf("\n");
-    }
-}
-void jogador1PosturaDefesa()
-{
-    /*
-            defenseSprite1
-                           @ |1
-                           |=|2
-                          /\  3
-                        /  |  4
-                        12345
-    */
-    char jogador[4][5] = {
-        {' ', ' ', '@', ' ', '||'},
-        {' ', ' ', '||', '=', '||'},
-        {' ', '/', ' \\', ' ', ' '},
-        {'/', ' ', '||', ' ', ' '},
-    };
-
-    for (int x = 0; x < 4; x++)
-    {
-        for (int y = 0; y < 5; y++)
-        {
-            printf("%c", jogador[x][y]);
-        }
-        printf("\n");
-    }
-}
-
-void jogador2PosturaBase()
-{
-    /*
-            baseSprite2
-                            \  @ 1
-                             \=| 2
-                              /\ 3
-                             |  \4
-                            12345
-    */
-    char jogador[4][5] = {
-        {'\\', ' ', ' ', '@', ' '},
-        {' ', '\\', '=', '||', ' '},
-        {' ', ' ', '/', '\\', ' '},
-        {' ', ' ', '||', ' ', '\\'},
-    };
-
-    for (int x = 0; x < 4; x++)
-    {
-        for (int y = 0; y < 5; y++)
-        {
-            printf("%c", jogador[x][y]);
-        }
-        printf("\n");
-    }
-}
-#define SPRITE_WIDTH 7
-#define SPRITE_HEIGHT 4
-
-char baseSprite[SPRITE_HEIGHT][SPRITE_WIDTH+1] = { 
-    "   @  /",
-    "  |=/  ",
-    " /     ",
-    "/ |    "
-};
-void jogador2PosturaAtaque()
-{
-    /*
-            attackSprite2
-                              @ 1
-                        ---*-=| 2
-                             /\ 3
-                            |  \4
-                        12345678
-    */
-    char jogador[4][8] = {
-        {' ', ' ', ' ', ' ', ' ', '@', ' '},
-        {'-', '-', '-', '*', '=', '||', ' '},
-        {' ', ' ', ' ', ' ', '/', '\\', ' '},
-        {' ', ' ', ' ', ' ', '||', ' ', '\\'}};
-
-    for (int x = 0; x < 4; x++)
-    {
-        for (int y = 0; y < 8; y++)
-        {
-            printf("%c", jogador[x][y]);
-        }
-        printf("\n");
-    }
-}
-void jogador2PosturaDefesa()
-{
-    /*
-            defensesprite2
-                        |  @ 1
-                        |==| 2
-                          /\ 3
-                         |  \4
-                        1234
-    */
-    char jogador[4][4] = {
-        {'||', ' ', '@', ' '},
-        {'||', '=', '||', ' '},
-        {' ', '/', '\\', ' '},
-        {' ', '||', ' ', '\\'},
-    };
-
-    for (int x = 0; x < 4; x++)
-    {
-        for (int y = 0; y < 4; y++)
-        {
-            printf("%c", jogador[x][y]);
-        }
-        printf("\n");
-    }
-}
-void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH+1]) {
-    for (int i = 0; i < SPRITE_HEIGHT; i++) {
-        screenGotoxy(x, y + i);
-        printf("%s", sprite[i]);
-    }
+    screenGotoxy(x, y);
+    printf("%s", emoji);
     screenUpdate();
 }
-void clearSprite(int x, int y, int width, int height) {
-    for (int i = 0; i < height; i++) {
-        screenGotoxy(x, y + i);
-        for (int j = 0; j < width; j++) {
-            printf(" ");
-        }
-    }
-}
 
-void updatePlayer(int *x, int *y, int dx, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH+1]) {
-    clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
+void updatePlayer(int *x, int *y, int dx, char *emoji)
+{
+    screenGotoxy(*x, *y);
+    printf(" ");
     *x += dx;
-    printSprite(*x, *y, sprite);
+    printObject(*x, *y, emoji);
 }
 
 int main()
@@ -302,11 +138,11 @@ int main()
             }
             else if (ch == 97)
             { // 'a' move left
-                updatePlayer(&player1X, &player1Y, -1, baseSprite);
+                updatePlayer(&player1X, &player1Y, -1, playerEmoji);
             }
             else if (ch == 100)
             { // 'd' move right
-                updatePlayer(&player1X, &player1Y, 1, baseSprite);
+                updatePlayer(&player1X, &player1Y, 1, playerEmoji);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
@@ -318,18 +154,18 @@ int main()
             }
             else if (ch == 106)
             { // 'j' move left
-                updatePlayer(&player2X, &player2Y, -1, baseSprite);
+                updatePlayer(&player2X, &player2Y, -1, playerEmoji);
             }
             else if (ch == 108)
             { // 'l' move right
-                updatePlayer(&player2X, &player2Y, 1, baseSprite);
+                updatePlayer(&player2X, &player2Y, 1, playerEmoji);
             }
         }
 
         if (timerTimeOver() == 1)
         {
-            printSprite(player1X, player1Y, baseSprite);
-            printSprite(player2X, player2Y, baseSprite);
+            printObject(player1X, player1Y, playerEmoji);
+            printObject(player2X, player2Y, playerEmoji);
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
             screenGotoxy(50, 5);

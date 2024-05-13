@@ -6,12 +6,29 @@
 #include "keyboard.h"
 #include "timer.h"
 
+#define SPRITE_HEIGHT 4
+
+char basePostureBlue[SPRITE_HEIGHT][6] = {
+    "  @  /",
+    "  |=/",
+    " /\\",
+    "/ |",
+};
+
+char basePostureRed[SPRITE_HEIGHT][5] = {
+    "\\  @",
+    " \\=||",
+    "   /\\",
+    "  ||  \\"};
+
+char AttackPostureBlue[SPRITE_HEIGHT][9] = {
+
+};
 struct espada
 {
     int posic_lamina;
     int posic_bainha;
 };
-
 typedef struct jogador
 {
     int posicao;
@@ -65,8 +82,7 @@ void jogador1PosturaBase()
         {' ', ' ', '@', ' ', ' ', '/'},
         {' ', ' ', '||', '=', '/', ' '},
         {' ', '/', '\\', ' ', ' ', ' '},
-        {'/', ' ', '|', ' ', ' ', ' '}
-        };
+        {'/', ' ', '|', ' ', ' ', ' '}};
 
     for (int x = 0; x < 4; x++)
     {

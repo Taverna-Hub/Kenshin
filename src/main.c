@@ -5,111 +5,36 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
+#define SPRITE_WIDTH 7
+#define SPRITE_HEIGHT 4
 
-#define SPRITE_HEIGHT_ALL 4
-
-#define SPRITE_WIDTH_BASE_BLUE 6
-#define SPRITE_WIDTH_ATTACK_BLUE 9
-#define SPRITE_WIDTH_DEFENSE_BLUE 5
-
-#define SPRITE_WIDTH_BASE_RED 5
-#define SPRITE_WIDTH_ATTACK_RED 8
-#define SPRITE_WIDTH_DEFENSE_RED 4
-
-// Posturas Base
-char basePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_BASE_BLUE] = {
+char baseSprite[SPRITE_HEIGHT][SPRITE_WIDTH+1] = { 
     "  @  /",
-    "  |=/",
-    " /\\",
-    "/ |",
+    "  |=/  ",
+    "  |    ",
+    " / \\   "
 };
-char basePostureRed[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_BASE_RED] = {
-    "\\  @",
-    " \\=|",
-    "   /\\",
-    "  |  \\"};
 
-// Posturas Ataque
-char AttackPostureBlue[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_ATTACK_BLUE] = {
-    "  @",
-    "  |=-*---",
-    " /\\",
-    "/  |"};
-char AttackPostureRed[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_ATTACK_RED] = {
-    "      @",
-    "---*-=|",
-    "     /\\",
-    "    |  \\"};
-
-// Posturas Defesa
-char DefensePostureBlue[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_DEFENSE_BLUE] = {
-    "  @ |",
-    "  |=|",
-    " /\\",
-    "/ |"};
-char DefensePostureRed[SPRITE_HEIGHT_ALL][SPRITE_WIDTH_DEFENSE_RED] = {
-    "| @",
-    "|=|",
-    " /\\",
-    "|  \\"};
-
-struct espada
-{
-    int posic_lamina;
-    int posic_bainha;
-};
-typedef struct jogador
-{
-    int posicao;
-    int vidaTotal;
-    struct espada katana;
-} jogador;
-
-void VidaBlue(jogador *blue)
-{
-    int hpBlue = 5;
-    blue->vidaTotal = hpBlue;
-    return blue->vidaTotal;
-}
-void VidaRed(jogador *red)
-{
-    int hpRed = 5;
-    red->vidaTotal = hpRed;
-    return red->vidaTotal;
-}
-
-void Combate(char atkBlue, char atkRed, int posicaoBlue, int posicaoRed, char defBlue, char defRed, jogador *blue, jogador *red)
-
-{
-    if (posicaoBlue = posicaoRed + 1) // se azul tiver no alcançe com distancia de 1 do referencial da cabeca "@"
-    {
-        if (atkBlue) // se azul atacar
-        {
-            if (defRed) // se vermelho defender
-            {
-                VidaRed(red);
-                red->vidaTotal -= 0; // perde 0hp
-            }
-            VidaRed(red);
-            red->vidaTotal--; // perde 1hp
-        }
+void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH+1]) {
+    for (int i = 0; i < SPRITE_HEIGHT; i++) {
+        screenGotoxy(x, y + i);
+        printf("%s", sprite[i]);
     }
-    printf("Errou Ataque");
-}
-
-void printObject(int x, int y, const char *emoji)
-{
-    screenGotoxy(x, y);
-    printf("%s", emoji);
     screenUpdate();
 }
+void clearSprite(int x, int y, int width, int height) {
+    for (int i = 0; i < height; i++) {
+        screenGotoxy(x, y + i);
+        for (int j = 0; j < width; j++) {
+            printf(" ");
+        }
+    }
+}
 
-void updatePlayer(int *x, int *y, int dx, char *emoji)
-{
-    screenGotoxy(*x, *y);
-    printf(" ");
+void updatePlayer(int *x, int *y, int dx, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH+1]) {
+    clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     *x += dx;
-    printObject(*x, *y, emoji);
+    printSprite(*x, *y, sprite);
 }
 
 int main()
@@ -138,11 +63,11 @@ int main()
             }
             else if (ch == 97)
             { // 'a' move left
-                updatePlayer(&player1X, &player1Y, -1, playerEmoji);
+                updatePlayer(&player1X, &player1Y, -1, baseSprite);
             }
             else if (ch == 100)
             { // 'd' move right
-                updatePlayer(&player1X, &player1Y, 1, playerEmoji);
+                updatePlayer(&player1X, &player1Y, 1, baseSprite);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
@@ -154,18 +79,18 @@ int main()
             }
             else if (ch == 106)
             { // 'j' move left
-                updatePlayer(&player2X, &player2Y, -1, playerEmoji);
+                updatePlayer(&player2X, &player2Y, -1, baseSprite);
             }
             else if (ch == 108)
             { // 'l' move right
-                updatePlayer(&player2X, &player2Y, 1, playerEmoji);
+                updatePlayer(&player2X, &player2Y, 1, baseSprite);
             }
         }
 
         if (timerTimeOver() == 1)
         {
-            printObject(player1X, player1Y, playerEmoji);
-            printObject(player2X, player2Y, playerEmoji);
+            printSprite(player1X, player1Y, baseSprite);
+            printSprite(player2X, player2Y, baseSprite);
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
             screenGotoxy(50, 5);

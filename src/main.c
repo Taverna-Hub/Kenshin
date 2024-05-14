@@ -8,6 +8,7 @@
 
 #define SPRITE_WIDTH 7
 #define SPRITE_HEIGHT 4
+int timer=0;
 
 void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH+1]) {
     for (int i = 0; i < SPRITE_HEIGHT; i++) {
@@ -37,16 +38,16 @@ char baseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH+1] = {
     "   / \\"
 };
 char attackSprite1[SPRITE_HEIGHT][SPRITE_WIDTH+1] = { 
-    "    @  ",
-    "|-*---",
-    "    |  ",
-    "   / \\"
+    " @  ",
+    " |-*---",
+    " |  ",
+    "/ \\"
 };
 char attackSprite2[SPRITE_HEIGHT][SPRITE_WIDTH+1] = { 
-   "    @  ",
-"---*- |",
-   "    |  ",
-   "   / \\"
+   "     @ ",
+  "---*-| ",
+   "     | ",
+   "    / \\"
 };
 // Posturas Base
 /* char basePostureBlue[SPRITE_HEIGHT][SPRITE_WIDTH] = {
@@ -176,7 +177,11 @@ int main()
         }
 
         if (timerTimeOver() == 1)
-        {
+        { if(timer==0){
+            printSprite(player1X, player1Y, baseSprite);
+            printSprite(player2X, player2Y, baseSprite2);
+
+        }
             
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
@@ -197,6 +202,7 @@ int main()
                 player1State = 0;
             if (player2State == 1)
                 player2State = 0;
+            timer=timer+1;
         }
     }
 

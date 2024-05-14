@@ -108,9 +108,11 @@ int main()
             { // 'q' player 1 attack
                 player2Health -= 10;
                 updatePlayer(&player1X, &player1Y, 0, attackSprite1);
-
-                // player 2 moveset
             }
+            else if (ch == 101)
+            {
+            }
+            // player 2 moveset
             else if (ch == 117)
             { // 'u' player 2 attack
                 player1Health -= 10;
@@ -126,46 +128,40 @@ int main()
             }
             else if (ch == 111)
             { // o player 2 defense[SPRITE_HEIGHT][SPRITE_WIDTH] = {
-                "",
-                    @ | "",
-                    |= | "",
-                    | "",
-                    /\
-            };
-            updatePlayer(&player2X, &player2Y, -1, defenseSprite2);
+                updatePlayer(&player2X, &player2Y, -1, defenseSprite2);
+            }
+        }
+
+        if (timerTimeOver() == 1)
+        {
+
+            screenGotoxy(10, 5);
+            printf("Player 1 Health: %d", player1Health);
+            screenGotoxy(50, 5);
+            printf("Player 2 Health: %d", player2Health);
+
+            if (player1Health <= 0)
+            {
+                printf("Player 1 has died. Game over.\n");
+                break;
+            }
+            else if (player2Health <= 0)
+            {
+                printf("Player 2 has died. Game over.\n");
+                break;
+            }
+            if (player1State == 1)
+                player1State = 0;
+            if (player2State == 1)
+                player2State = 0;
         }
     }
 
-    if (timerTimeOver() == 1)
-    {
+    screenDestroy();
+    keyboardDestroy();
+    timerDestroy();
 
-        screenGotoxy(10, 5);
-        printf("Player 1 Health: %d", player1Health);
-        screenGotoxy(50, 5);
-        printf("Player 2 Health: %d", player2Health);
-
-        if (player1Health <= 0)
-        {
-            printf("Player 1 has died. Game over.\n");
-            break;
-        }
-        else if (player2Health <= 0)
-        {
-            printf("Player 2 has died. Game over.\n");
-            break;
-        }
-        if (player1State == 1)
-            player1State = 0;
-        if (player2State == 1)
-            player2State = 0;
-    }
-}
-
-screenDestroy();
-keyboardDestroy();
-timerDestroy();
-
-return 0;
+    return 0;
 }
 
 // Posturas Base

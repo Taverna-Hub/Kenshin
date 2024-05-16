@@ -130,7 +130,7 @@ int main()
             }
             else if (ch == 101)
             {
-                updatePlayer(&player1X, &player1Y, 1, defenseSprite1);
+                updatePlayer(&player1X, &player1Y, 0, defenseSprite1);
             }
 
             // player 2 moveset

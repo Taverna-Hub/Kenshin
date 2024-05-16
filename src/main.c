@@ -125,8 +125,11 @@ int main()
             }
             else if (ch == 113)
             { // 'q' player 1 attack
-                player2Health -= 10;
                 updatePlayer(&player1X, &player1Y, 0, attackSprite1);
+                if (player1X-player2X==-6){
+                player2Health -= 10;
+
+                }
             }
             else if (ch == 101)
             {
@@ -136,8 +139,12 @@ int main()
             // player 2 moveset
             else if (ch == 117)
             { // 'u' player 2 attack
-                player1Health -= 10;
+                
                 updatePlayer(&player2X, &player2Y, 0, attackSprite2);
+                if (player2X-player1X==5){
+                player1Health -= 10;
+
+                }
             }
             else if (ch == 106)
             { // 'j' move left

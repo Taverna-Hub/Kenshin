@@ -54,10 +54,10 @@ char defenseSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
 };
 
 char baseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
-    {'\\', ' ', ' ', '@', ' '},
-    {' ', '\\', '=', '|', ' '},
-    {' ', ' ', ' ', '|', ' '},
-    {' ', ' ', '/', ' ', '\\'},
+    {' ', ' ', '\\', ' ', ' ', '@', ' '},
+    {' ', ' ', ' ', '\\', '=', '|', ' '},
+    {' ', ' ', ' ', ' ', ' ', '|', ' '},
+    {' ', ' ', ' ', ' ', '/', ' ', '\\'},
 };
 
 char attackSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
@@ -68,10 +68,10 @@ char attackSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
 };
 
 char defenseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
-    {'|', ' ', '@', ' '},
-    {'|', '=', '|', ' '},
-    {' ', ' ', '|', ' '},
-    {' ', '/', ' ', '\\'},
+    {' ', ' ', ' ', '|', ' ', '@', ' '},
+    {' ', ' ', ' ' ,'|', '=', '|', ' '},
+    {' ', ' ', ' ' , ' ', ' ', '|', ' '},
+    {' ', ' ', ' ', ' ', '/', ' ', '\\'},
 };
 
 void updatePlayer(int *x, int *y, int dx, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
@@ -131,7 +131,7 @@ int main()
 
                 }
             }
-            else if (ch == 101)
+            else if (ch == 101) 
             {
                 updatePlayer(&player1X, &player1Y, 0, defenseSprite1);
             }

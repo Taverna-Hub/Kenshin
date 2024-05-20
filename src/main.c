@@ -8,6 +8,11 @@
 
 #define SPRITE_WIDTH 7
 #define SPRITE_HEIGHT 4
+#define ATK_DMG 10
+#define DF_DMG 5
+#define BASE_STATE 0
+#define ATK_STATE 1
+#define DF_STATE 2
 int timer = 0;
 
 void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
@@ -77,7 +82,9 @@ char defenseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
 void updatePlayer(int *x, int *y, int dx, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
-    *x += dx;
+    if((*x+dx)<MAXX-7 && ((*x+dx)>MINX)){
+        *x += dx;
+    }
     printSprite(*x, *y, sprite);
 }
 
@@ -91,12 +98,12 @@ void cenario(int x, int y) {
 int main()
 {
     int ch = 0;
-    int player1X = 34, player1Y = 18;
-    int player2X = 50, player2Y = 18;
+    int player1X = 17, player1Y = 18;
+    int player2X = 56, player2Y = 18;
     int player1Health = 100;
     int player2Health = 100;
-    int player1State = 0;
-    int player2State = 0;
+    int player1State = BASE_STATE;
+    int player2State = BASE_STATE;
 
     screenInit(1);
     keyboardInit();
@@ -125,24 +132,26 @@ int main()
             }
             else if (ch == 113)
             { // 'q' player 1 attack
+                player1State=ATK_STATE;
                 updatePlayer(&player1X, &player1Y, 0, attackSprite1);
-                if (player1X-player2X==-6){
-                player2Health -= 10;
+                if (player1X-player2X==-4){
+                player2Health -= (player2State==DF_STATE)? DF_DMG:ATK_DMG;
 
                 }
             }
             else if (ch == 101) 
             {
+                player1State=DF_STATE;
                 updatePlayer(&player1X, &player1Y, 0, defenseSprite1);
             }
 
             // player 2 moveset
             else if (ch == 117)
             { // 'u' player 2 attack
-                
+                player2State=ATK_STATE;
                 updatePlayer(&player2X, &player2Y, 0, attackSprite2);
-                if (player2X-player1X==5){
-                player1Health -= 10;
+                if (player2X-player1X==4){
+                player1Health -= (player1State==DF_STATE)? DF_DMG:ATK_DMG;
 
                 }
             }
@@ -155,14 +164,18 @@ int main()
                 updatePlayer(&player2X, &player2Y, 1, baseSprite2);
             }
             else if (ch == 111)
-            { // o player 2 defense[SPRITE_HEIGHT][SPRITE_WIDTH] = {
+            {   player2State=DF_STATE;
                 updatePlayer(&player2X, &player2Y, 0, defenseSprite2);
             }
         }
 
         if (timerTimeOver() == 1)
         {
+        if (timer==0){
+            printSprite(player1X, player1Y, baseSprite1);
+            printSprite(player2X, player2Y, baseSprite2);
 
+        }
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
             screenGotoxy(50, 5);
@@ -182,6 +195,7 @@ int main()
                 player1State = 0;
             if (player2State == 1)
                 player2State = 0;
+            timer=timer+1;
         }
     }
 

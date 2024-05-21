@@ -13,9 +13,14 @@
 #define BASE_STATE 0
 #define ATK_STATE 1
 #define DF_STATE 2
-
+#define JUMP_STATE 3
+#define MAX_JUMP_HEIGHT 5
 
 int timer = 0;
+int player1JumpHeight = 0;
+int player2JumpHeight = 0;
+int player1Jumping = 0;
+int player2Jumping = 0;
 
 void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
@@ -37,11 +42,12 @@ void clearSprite(int x, int y, int width, int height)
             printf(" ");
         }
     }
+    screenUpdate();
 }
 
 char baseSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', '@', ' ', ' ', '/', ' '},
-    {' ', '|', '=', '/', ' ', ' ',' '},
+    {' ', '|', '=', '/', ' ', ' ', ' '},
     {' ', '|', ' ', ' ', ' ', ' '},
     {'/', ' ', '\\', ' ', ' ', ' '}
 };
@@ -96,8 +102,34 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
 void cenario(int x, int y) {
     screenGotoxy(x, y);
     printf("\033[0;32m");
-    printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     printf("\033[0m");
+}
+
+void handleJump(int *playerY, int *jumpHeight, int *jumping, int *state)
+{
+    if (*jumping)
+    {
+        if (*jumpHeight < MAX_JUMP_HEIGHT && *jumpHeight >= 0)
+        {
+            *playerY -= 1;
+            (*jumpHeight)++;
+        }
+        else if (*jumpHeight >= MAX_JUMP_HEIGHT)
+        {
+            (*jumpHeight) = -MAX_JUMP_HEIGHT;
+        }
+        else if (*jumpHeight < 0)
+        {
+            *playerY += 1;
+            (*jumpHeight)++;
+            if (*jumpHeight == 0)
+            {
+                *jumping = 0;
+                *state = BASE_STATE;
+            }
+        }
+    }
 }
 
 int main()
@@ -112,7 +144,7 @@ int main()
 
     screenInit(1);
     keyboardInit();
-    timerInit(1);
+    timerInit(100);
     screenSetColor(WHITE, BLACK);
     cenario(2, 22);
 
@@ -144,7 +176,7 @@ int main()
             { // 'q' player 1 attack
                 player1State = ATK_STATE;
                 updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, baseSprite2);
-                if (player1X + SPRITE_WIDTH >= player2X +1)
+                if (player1X + SPRITE_WIDTH >= player2X + 1)
                 {
                     player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
                 }
@@ -154,13 +186,18 @@ int main()
                 player1State = DF_STATE;
                 updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, baseSprite2);
             }
+            else if (ch == 119 && !player1Jumping)
+            { // 'w' player 1 jump
+                player1Jumping = 1;
+                player1State = JUMP_STATE;
+            }
 
             // player 2 moveset
             else if (ch == 117)
             { // 'u' player 2 attack
                 player2State = ATK_STATE;
                 updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, baseSprite1);
-                if (player2X <= player1X + SPRITE_WIDTH -1)
+                if (player2X <= player1X + SPRITE_WIDTH - 1)
                 {
                     player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
                 }
@@ -186,6 +223,11 @@ int main()
                 player2State = DF_STATE;
                 updatePlayer(&player2X, &player2Y, 0, 0, defenseSprite2, player1X, player1Y, baseSprite1);
             }
+            else if (ch == 105 && !player2Jumping)
+            { // 'i' player 2 jump
+                player2Jumping = 1;
+                player2State = JUMP_STATE;
+            }
         }
 
         if (timerTimeOver() == 1)
@@ -200,6 +242,14 @@ int main()
             screenGotoxy(50, 5);
             printf("Player 2 Health: %d", player2Health);
 
+            handleJump(&player1Y, &player1JumpHeight, &player1Jumping, &player1State);
+            handleJump(&player2Y, &player2JumpHeight, &player2Jumping, &player2State);
+
+            
+
+            printSprite(player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : (player1State == ATK_STATE) ? attackSprite1 : (player1State == DF_STATE) ? defenseSprite1 : baseSprite1);
+            printSprite(player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : (player2State == ATK_STATE) ? attackSprite2 : (player2State == DF_STATE) ? defenseSprite2 : baseSprite2);
+
             if (player1Health <= 0)
             {
                 printf("Player 1 has died. Game over.\n");
@@ -210,9 +260,9 @@ int main()
                 printf("Player 2 has died. Game over.\n");
                 break;
             }
-            if (player1State == ATK_STATE)
+            if (player1State == ATK_STATE && !player1Jumping)
                 player1State = BASE_STATE;
-            if (player2State == ATK_STATE)
+            if (player2State == ATK_STATE && !player2Jumping)
                 player2State = BASE_STATE;
             timer++;
         }

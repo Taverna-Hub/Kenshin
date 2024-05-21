@@ -124,11 +124,18 @@ int main()
             // player 1 moveset
             else if (ch == 97)
             { // 'a' move left
+                player1State=BASE_STATE;
                 updatePlayer(&player1X, &player1Y, -1, baseSprite1);
+                printSprite(player2X, player2Y, baseSprite2);
             }
             else if (ch == 100)
             { // 'd' move right
+                player1State=BASE_STATE;
+                if(player1X-player2X<-4){
                 updatePlayer(&player1X, &player1Y, 1, baseSprite1);
+
+                }
+                printSprite(player2X, player2Y, baseSprite2);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
@@ -154,18 +161,29 @@ int main()
                 player1Health -= (player1State==DF_STATE)? DF_DMG:ATK_DMG;
 
                 }
+                printSprite(player1X, player1Y, baseSprite1);
             }
             else if (ch == 106)
             { // 'j' move left
+                player2State=BASE_STATE;
+                if (player2X-player1X>4){
                 updatePlayer(&player2X, &player2Y, -1, baseSprite2);
+
+                }
+                printSprite(player1X, player1Y, baseSprite1);
             }
             else if (ch == 108)
             { // 'l' move right
+             
+                player2State=BASE_STATE;
                 updatePlayer(&player2X, &player2Y, 1, baseSprite2);
+                printSprite(player1X, player1Y, baseSprite1);
             }
+            
             else if (ch == 111)
             {   player2State=DF_STATE;
                 updatePlayer(&player2X, &player2Y, 0, defenseSprite2);
+                printSprite(player1X, player1Y, baseSprite1);
             }
         }
 

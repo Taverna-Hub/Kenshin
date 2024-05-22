@@ -16,24 +16,15 @@
 #define JUMP_STATE 3
 #define MAX_JUMP_HEIGHT 5
 
+#define ALTURA_BAMBOO 10
+#define QTD_BAMBOO 8
+
 int timer = 0;
 int player1JumpHeight = 0;
 int player2JumpHeight = 0;
 int player1Jumping = 0;
 int player2Jumping = 0;
-
-/* Desenho da Casa-Cenário
-
-               ╔════════════════════╗
-            ══╝║—————————⓿—————————║╚══
-                ║————————╢╟————————║
-                ║══╣     ║║     ╠══║
-              ▁▁║▁▁▁▁▁▁▁▁║║▁▁▁▁▁▁▁▁║▁▁
-
-    ═   ║   ╒   ╓   ╔   ╕   ╖   ╗   ╘   ╙   ╚   ╛   ╜   ╝   ╞   ╟   ╠   ╡   ╢   ╣   ╤   ╥   ╦   ╧   ╨   ╩   ╪   ╫   ╬
-    —   ⓿  ▁
-
-*/
+int alturaTela = 25;
 
 void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
@@ -113,18 +104,52 @@ void cenario(int x, int y)
     printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     printf("\033[0m");
 }
+void drawHouse(int x, int y)
+{
+    screenGotoxy(x, y);
+    char House[7][15] = {
+        {'/', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '\\'},
+        {'I', ' ', '|', '_', '_', '_', '_', '_', '_', '_', '_', '|', ' ', 'I'},
+        {' ', ' ', '|', ' ', ' ', ' ', '|', '|', ' ', ' ', ' ', '|', ' ', ' '},
+        {' ', ' ', '|', ' ', ' ', ' ', '|', '|', ' ', ' ', ' ', '|', ' ', ' '},
+        {' ', ' ', '|', ' ', ' ', 'o', '|', '|', 'o', ' ', ' ', '|', ' ', ' '},
+        {' ', ' ', '|', ' ', ' ', ' ', '|', '|', ' ', ' ', ' ', '|', ' ', ' '},
+        {' ', ' ', '|', '_', '_', '_', '|', '|', '_', '_', '_', '|', ' ', ' '},
+    };
 
-void desenhaBamboos(int x, int y, int altura, int quantidade)
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 14; j++)
+        {
+            printf("%c", House[i][j]);
+        }
+        printf("\n");
+    }
+}
+/* Desenho da Casa-Cenário
+
+                ╔════════════════════╗
+             ══╝║—————————⓿—————————║╚══
+                 ║————————╢╟————————║
+                 ║══╣     ║║     ╠══║
+               ▁▁║▁▁▁▁▁▁▁▁║║▁▁▁▁▁▁▁▁║▁▁
+
+    ═   ║   ╒   ╓   ╔   ╕   ╖   ╗   ╘   ╙   ╚   ╛   ╜   ╝   ╞   ╟   ╠   ╡   ╢   ╣   ╤   ╥   ╦   ╧   ╨   ╩   ╪   ╫   ╬
+    —   ⓿  ▁
+
+*/
+
+void drawBamboo(int x, int y, int altura, int quantidade)
 {
     printf("\033[0;32m"); // Cor Verde
 
     for (int i = 0; i < quantidade; i++)
     {
-        int xBamboo = x + i * 5; // Distância entre os bamboos
+        int xBamboo = x + i * 3; // Distância entre os bamboos
         for (int j = 0; j < altura; j++)
         {
             screenGotoxy(xBamboo, y - j);
-            printf("||");
+            printf("║");
         }
     }
     printf("\033[0m"); // Reseta a cor
@@ -165,7 +190,6 @@ int main()
     int player2Health = 100;
     int player1State = BASE_STATE;
     int player2State = BASE_STATE;
-    int alturaTela = 25;
 
     screenInit(1);
     keyboardInit();
@@ -262,7 +286,10 @@ int main()
                 printSprite(player1X, player1Y, baseSprite1);
                 printSprite(player2X, player2Y, baseSprite2);
             }
-            desenhaBamboos(10, alturaTela - 4, 10, 5);
+
+            drawBamboo(50, alturaTela - 4, ALTURA_BAMBOO, QTD_BAMBOO);
+            drawHouse(-50, alturaTela - 8);
+
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
             screenGotoxy(50, 5);

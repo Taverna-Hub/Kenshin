@@ -31,7 +31,7 @@ int player2Jumping = 0;
               ▁▁║▁▁▁▁▁▁▁▁║║▁▁▁▁▁▁▁▁║▁▁
 
     ═   ║   ╒   ╓   ╔   ╕   ╖   ╗   ╘   ╙   ╚   ╛   ╜   ╝   ╞   ╟   ╠   ╡   ╢   ╣   ╤   ╥   ╦   ╧   ╨   ╩   ╪   ╫   ╬
-    —   ⓿  ▁  
+    —   ⓿  ▁
 
 */
 
@@ -261,8 +261,8 @@ int main()
             {
                 printSprite(player1X, player1Y, baseSprite1);
                 printSprite(player2X, player2Y, baseSprite2);
-                desenhaBamboos(10, alturaTela - 4, 10, 5);
             }
+            desenhaBamboos(10, alturaTela - 4, 10, 5);
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
             screenGotoxy(50, 5);

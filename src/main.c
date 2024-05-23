@@ -328,7 +328,8 @@ int main()
             }
             if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X < player1X + SPRITE_WIDTH)
             {
-                player2X = player1X + SPRITE_WIDTH;
+                 clearSprite(player2X,player2Y, SPRITE_WIDTH,SPRITE_HEIGHT);
+                player2X = player1X -SPRITE_WIDTH;
             }
 
             printSprite(player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : (player1State == ATK_STATE) ? attackSprite1

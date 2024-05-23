@@ -85,11 +85,20 @@ char defenseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', ' ', ' ', ' ', ' ', '|', ' '},
     {' ', ' ', ' ', ' ', '/', ' ', '\\'}};
 
-void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1], int scndX, int scndY, char scndSprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
+void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1], int scndX, int scndY, char scndSprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1], int scndJumping)
 {
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if ((*x + dx) < MAXX - SPRITE_WIDTH && (*x + dx) > MINX)
     {
+        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 2+scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        {
+            dx = 0;
+        }
+        else if (dx < 0 && (*x + dx< scndX + SPRITE_WIDTH) && (*x > scndX) && !(*y + dy < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        {
+            dx = 0;
+        }
+
         *x += dx;
     }
     *y += dy;
@@ -104,6 +113,7 @@ void cenario(int x, int y)
     printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     printf("\033[0m");
 }
+
 void drawHouse(int x, int y)
 {
     screenGotoxy(x, y);
@@ -117,27 +127,17 @@ void drawHouse(int x, int y)
         {' ', ' ', '|', '_', '_', '_', '|', '|', '_', '_', '_', '|', ' ', ' '},
     };
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 7; i++)
     {
-        for (int j = 0; j < 14; j++)
+        screenGotoxy(x,y+i);
+        for (int j = 0; j < 15; j++)
         {
             printf("%c", House[i][j]);
         }
-        printf("\n");
+       
     }
+    screenUpdate();
 }
-/* Desenho da Casa-Cenário
-
-                ╔════════════════════╗
-             ══╝║—————————⓿—————————║╚══
-                 ║————————╢╟————————║
-                 ║══╣     ║║     ╠══║
-               ▁▁║▁▁▁▁▁▁▁▁║║▁▁▁▁▁▁▁▁║▁▁
-
-    ═   ║   ╒   ╓   ╔   ╕   ╖   ╗   ╘   ╙   ╚   ╛   ╜   ╝   ╞   ╟   ╠   ╡   ╢   ╣   ╤   ╥   ╦   ╧   ╨   ╩   ╪   ╫   ╬
-    —   ⓿  ▁
-
-*/
 
 void drawBamboo(int x, int y, int altura, int quantidade)
 {
@@ -155,8 +155,9 @@ void drawBamboo(int x, int y, int altura, int quantidade)
     printf("\033[0m"); // Reseta a cor
 }
 
-void handleJump(int *playerY, int *jumpHeight, int *jumping, int *state)
+void handleJump(int *playerX, int *playerY, int *jumpHeight, int *jumping, int *state, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
+    clearSprite(*playerX, *playerY, SPRITE_WIDTH, SPRITE_HEIGHT);
     if (*jumping)
     {
         if (*jumpHeight < MAX_JUMP_HEIGHT && *jumpHeight >= 0)
@@ -179,6 +180,7 @@ void handleJump(int *playerY, int *jumpHeight, int *jumping, int *state)
             }
         }
     }
+    printSprite(*playerX, *playerY, sprite);
 }
 
 int main()
@@ -193,7 +195,7 @@ int main()
 
     screenInit(1);
     keyboardInit();
-    timerInit(100);
+    timerInit(150);
     screenSetColor(WHITE, BLACK);
     cenario(2, alturaTela - 3);
 
@@ -211,20 +213,17 @@ int main()
             else if (ch == 97)
             { // 'a' move left
                 player1State = BASE_STATE;
-                updatePlayer(&player1X, &player1Y, -1, 0, baseSprite1, player2X, player2Y, baseSprite2);
+                updatePlayer(&player1X, &player1Y, -1, 0, baseSprite1, player2X, player2Y, baseSprite2, player2Jumping);
             }
             else if (ch == 100)
             { // 'd' move right
                 player1State = BASE_STATE;
-                if (player1X + SPRITE_WIDTH < player2X + 2)
-                {
-                    updatePlayer(&player1X, &player1Y, 1, 0, baseSprite1, player2X, player2Y, baseSprite2);
-                }
+                updatePlayer(&player1X, &player1Y, 1, 0, baseSprite1, player2X, player2Y, baseSprite2, player2Jumping);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
                 player1State = ATK_STATE;
-                updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, baseSprite2);
+                updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2 , player2Jumping);
                 if (player1X + SPRITE_WIDTH >= player2X + 1)
                 {
                     player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
@@ -233,7 +232,7 @@ int main()
             else if (ch == 101)
             { // 'e' player 1 defense
                 player1State = DF_STATE;
-                updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, baseSprite2);
+                updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, baseSprite2, player2Jumping);
             }
             else if (ch == 119 && !player1Jumping)
             { // 'w' player 1 jump
@@ -245,7 +244,7 @@ int main()
             else if (ch == 117)
             { // 'u' player 2 attack
                 player2State = ATK_STATE;
-                updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, baseSprite1);
+                updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, baseSprite1, player1Jumping);
                 if (player2X <= player1X + SPRITE_WIDTH - 1)
                 {
                     player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
@@ -254,23 +253,17 @@ int main()
             else if (ch == 106)
             { // 'j' move left
                 player2State = BASE_STATE;
-                if (player2X > player1X + SPRITE_WIDTH - 2)
-                {
-                    updatePlayer(&player2X, &player2Y, -1, 0, baseSprite2, player1X, player1Y, baseSprite1);
-                }
+                updatePlayer(&player2X, &player2Y, -1, 0, baseSprite2, player1X, player1Y, baseSprite1, player1Jumping);
             }
             else if (ch == 108)
             { // 'l' move right
                 player2State = BASE_STATE;
-                if (player2X < MAXX - SPRITE_WIDTH)
-                {
-                    updatePlayer(&player2X, &player2Y, 1, 0, baseSprite2, player1X, player1Y, baseSprite1);
-                }
+                updatePlayer(&player2X, &player2Y, 1, 0, baseSprite2, player1X, player1Y, baseSprite1, player1Jumping);
             }
             else if (ch == 111)
             { // 'o' player 2 defense
                 player2State = DF_STATE;
-                updatePlayer(&player2X, &player2Y, 0, 0, defenseSprite2, player1X, player1Y, baseSprite1);
+                updatePlayer(&player2X, &player2Y, 0, 0, defenseSprite2, player1X, player1Y, baseSprite1, player1Jumping);
             }
             else if (ch == 105 && !player2Jumping)
             { // 'i' player 2 jump
@@ -288,15 +281,15 @@ int main()
             }
 
             drawBamboo(50, alturaTela - 4, ALTURA_BAMBOO, QTD_BAMBOO);
-            drawHouse(-50, alturaTela - 8);
+            drawHouse(25, alturaTela - 10);
 
             screenGotoxy(10, 5);
             printf("Player 1 Health: %d", player1Health);
             screenGotoxy(50, 5);
             printf("Player 2 Health: %d", player2Health);
 
-            handleJump(&player1Y, &player1JumpHeight, &player1Jumping, &player1State);
-            handleJump(&player2Y, &player2JumpHeight, &player2Jumping, &player2State);
+            handleJump(&player1X, &player1Y, &player1JumpHeight, &player1Jumping, &player1State, baseSprite1);
+            handleJump(&player2X, &player2Y, &player2JumpHeight, &player2Jumping, &player2State, baseSprite2);
 
             printSprite(player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : (player1State == ATK_STATE) ? attackSprite1
                                                                                      : (player1State == DF_STATE)    ? defenseSprite1

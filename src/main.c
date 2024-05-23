@@ -51,7 +51,7 @@ void clearSprite(int x, int y, int width, int height)
 
 char baseSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', '@', ' ', ' ', '/', ' '},
-    {' ', '|', '=', '/', ' ', ' ', ' '},
+    {' ', '|', '=', '/', ' ', ' '},
     {' ', '|', ' ', ' ', ' ', ' '},
     {'/', ' ', '\\', ' ', ' ', ' '}};
 
@@ -90,11 +90,11 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if ((*x + dx) < MAXX - SPRITE_WIDTH && (*x + dx) > MINX)
     {
-        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 2+scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 1+scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy+2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
-        else if (dx < 0 && (*x + dx< scndX + SPRITE_WIDTH) && (*x > scndX) && !(*y + dy < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        else if (dx < 0 && (*x + dx< scndX + SPRITE_WIDTH-1) && (*x > scndX) && !(*y + dy+2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
@@ -110,8 +110,19 @@ void cenario(int x, int y)
 {
     screenGotoxy(x, y);
     printf("\033[0;32m");
-    printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    for (int i = 0; i < 117; i++){
+        printf("-");
+    }
     printf("\033[0m");
+    screenGotoxy(x,y+1);
+     
+    for (int i = 0; i < 110; i++) { // Ajuste para imprimir uma linha completa
+        if (i % 73 == 0) {
+            printf("☠");
+        } else {
+            printf(" ");
+        }
+    }
 }
 
 void drawHouse(int x, int y)
@@ -183,6 +194,25 @@ void handleJump(int *playerX, int *playerY, int *jumpHeight, int *jumping, int *
     printSprite(*playerX, *playerY, sprite);
 }
 
+void drawHealthBar(int x, int y, int health, int maxHealth)
+{
+    int barWidth = 45;
+    int filledWidth = (health * barWidth) / maxHealth;
+
+    screenGotoxy(x, y);
+    printf("\033[0;31m"); 
+    for (int i = 0; i < filledWidth; i++)
+    {
+        printf("█");
+    }
+    printf("\033[0;37m"); 
+    for (int i = filledWidth; i < barWidth; i++)
+    {
+        printf("█");
+    }
+    printf("\033[0m"); 
+}
+
 int main()
 {
     int ch = 0;
@@ -192,6 +222,7 @@ int main()
     int player2Health = 100;
     int player1State = BASE_STATE;
     int player2State = BASE_STATE;
+    int maxHealth=100;
 
     screenInit(1);
     keyboardInit();
@@ -213,12 +244,12 @@ int main()
             else if (ch == 97)
             { // 'a' move left
                 player1State = BASE_STATE;
-                updatePlayer(&player1X, &player1Y, -1, 0, baseSprite1, player2X, player2Y, baseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, -1, 0, baseSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2, player2Jumping);
             }
             else if (ch == 100)
             { // 'd' move right
                 player1State = BASE_STATE;
-                updatePlayer(&player1X, &player1Y, 1, 0, baseSprite1, player2X, player2Y, baseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, 1, 0, baseSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2, player2Jumping);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
@@ -232,7 +263,7 @@ int main()
             else if (ch == 101)
             { // 'e' player 1 defense
                 player1State = DF_STATE;
-                updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, baseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2, player2Jumping);
             }
             else if (ch == 119 && !player1Jumping)
             { // 'w' player 1 jump
@@ -282,11 +313,10 @@ int main()
 
             drawBamboo(50, alturaTela - 4, ALTURA_BAMBOO, QTD_BAMBOO);
             drawHouse(25, alturaTela - 10);
+            drawHealthBar(10, 5, player1Health, maxHealth);
+            drawHealthBar(66, 5, player2Health, maxHealth);
 
-            screenGotoxy(10, 5);
-            printf("Player 1 Health: %d", player1Health);
-            screenGotoxy(50, 5);
-            printf("Player 2 Health: %d", player2Health);
+            
 
             handleJump(&player1X, &player1Y, &player1JumpHeight, &player1Jumping, &player1State, baseSprite1);
             handleJump(&player2X, &player2Y, &player2JumpHeight, &player2Jumping, &player2State, baseSprite2);

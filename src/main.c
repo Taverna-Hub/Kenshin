@@ -136,7 +136,9 @@ void grassFloor(int x, int y)
         }
     }
 }
-/* House Cenario Draw made by Luan Kato
+void drawBackground(int x, int y)
+{
+    /*
                                                     PLACAR:
                     JOGADOR 1 [][][][][][][][]       0X0         JOGADOR 2 [][][][][][][][]
                           ________________________________                                   _______________________
@@ -163,9 +165,6 @@ void grassFloor(int x, int y)
                                *       *                                    ||||||||                  *
                                         \                                                  *
 */
-
-char drawBackground(int x, int y)
-{
     screenGotoxy(x, y);
     char Cenario[12][117] = {
         // , ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' -> Tem 30 espaços aqui
@@ -199,6 +198,10 @@ char drawBackground(int x, int y)
             else if (Cenario[i][j] == '#' || (Cenario[i][j] == '/' || Cenario[i][j] == '\\' || Cenario[i][j] == '!')) // pintar muros e quedas
             {
                 printf("\033[31m%c\033[0m", Cenario[i][j]); // vermelho
+            }
+            else if (Cenario[i][j] == 'G')
+            {
+                printf("\033[34m%c\033[0m", Cenario[i][j]);
             }
             else
             {

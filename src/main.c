@@ -265,12 +265,12 @@ void drawHealthBar(int x, int y, int health, int maxHealth)
     printf("\033[0;31m");
     for (int i = 0; i < filledWidth; i++)
     {
-        printf("♡");
+        printf("█");
     }
     printf("\033[0;37m");
     for (int i = filledWidth; i < barWidth; i++)
     {
-        printf("♡");
+        printf("█");
     }
     printf("\033[0m");
 }

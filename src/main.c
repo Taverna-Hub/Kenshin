@@ -90,11 +90,11 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if ((*x + dx) < MAXX - SPRITE_WIDTH && (*x + dx) > MINX)
     {
-        if (dx > 0 && (*x + SPRITE_WIDTH + dx > +scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 1+scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
-        else if (dx < 0 && (*x + dx < scndX + SPRITE_WIDTH) && (*x > scndX) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        else if (dx < 0 && (*x + dx < scndX + SPRITE_WIDTH - 1) && (*x > scndX) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
@@ -265,12 +265,12 @@ void drawHealthBar(int x, int y, int health, int maxHealth)
     printf("\033[0;31m");
     for (int i = 0; i < filledWidth; i++)
     {
-        printf("█");
+        printf("♡");
     }
     printf("\033[0;37m");
     for (int i = filledWidth; i < barWidth; i++)
     {
-        printf("█");
+        printf("♡");
     }
     printf("\033[0m");
 }

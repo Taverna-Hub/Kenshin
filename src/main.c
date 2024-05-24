@@ -90,11 +90,11 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if ((*x + dx) < MAXX - SPRITE_WIDTH && (*x + dx) > MINX)
     {
-        if (dx > 0 && (*x + SPRITE_WIDTH + dx > +scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy+2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        if (dx > 0 && (*x + SPRITE_WIDTH + dx > +scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
-        else if (dx < 0 && (*x + dx< scndX + SPRITE_WIDTH) && (*x > scndX) && !(*y + dy+2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        else if (dx < 0 && (*x + dx < scndX + SPRITE_WIDTH) && (*x > scndX) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
@@ -106,24 +106,96 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
     printSprite(scndX, scndY, scndSprite);
 }
 
-
-void cenario(int x, int y)
+void grassFloor(int x, int y)
 {
     screenGotoxy(x, y);
     printf("\033[0;32m");
-    for (int i = 0; i < 117; i++){
+    for (int i = 0; i < 117; i++)
+    {
         printf("-");
     }
     printf("\033[0m");
-    screenGotoxy(x,y+1);
-     
-    for (int i = 0; i < 110; i++) { 
-        if (i % 73 == 0) {
+    screenGotoxy(x, y + 1);
+
+    for (int i = 0; i < 110; i++)
+    {
+        if (i % 73 == 0)
+        {
             printf("☠");
-        } else {
+        }
+        else
+        {
             printf(" ");
         }
     }
+}
+/* House Cenario Draw made by Luan Kato
+                                                    PLACAR:
+                    JOGADOR 1 [][][][][][][][]       0X0         JOGADOR 2 [][][][][][][][]
+                          ________________________________                                   _______________________
+                            /--------------------------\                                      /=|==============|=\
+                         /--|--------------------------|--\                                     |              |
+                            |                          |  *                                     |              |
+                            |                          |                                    /-|===================|-\
+                          / |__________________________| \                                    |                   |
+                      /==|--------------------------------|==\                   || ||  ||    |                   |
+                     |   |               |                |  |                   || ||  ||    |                   |
+-------------------------|               |                |----------------------||-||--||--------------------------------
+                         |              o|o               |                      || ||  ||
+                         |               |                |                      || ||  ||
+                         |               |                |                      || ||  ||
+
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            *                                                ________
+        *                                                    *              /        \
+                                --*---                                     | ()   () |                *
+                                     \              *                      \    ^   /
+            *                         \                                     ||||||||
+                               *       *                                    ||||||||                  *
+                                        \                                                  *
+*/
+
+char drawBackground(int x, int y)
+{
+    screenGotoxy(x, y);
+    char Cenario[12][117] = {
+        // , ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' -> Tem 30 espaços aqui
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '\\', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', '=', '|', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '|', '=', '\\', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', '-', '-', '|', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '|', '-', '-', '\\', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', '-', '|', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '|', '-', '\\', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', '\\', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', '=', '=', '|', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '|', '=', '=', '\\', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' '},
+        {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '|', '|', '-', '|', '|', '-', '-', '-', '-', '|', '|', '-', '|', '|', '-', '|', '|', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'o', '|', 'o', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', '|', '|', ' ', '|', '|', ' ', '|', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    };
+
+    for (int i = 0; i < 12; i++)
+    {
+        screenGotoxy(x, y + i);
+        for (int j = 0; j < 117; j++)
+        {
+            if (Cenario[i][j] == '|' && (i < 11 && Cenario[i + 1][j] == '|'))
+            {
+                printf("\033[32m%c\033[0m", Cenario[i][j]);
+            }
+            else if (Cenario[i][j] == '-')
+            {
+                printf("\033[33m%c\033[0m", Cenario[i][j]);
+            }
+            else
+            {
+                printf("%c", Cenario[i][j]);
+            }
+        }
+    }
+    screenUpdate();
 }
 
 void drawHouse(int x, int y)
@@ -141,12 +213,11 @@ void drawHouse(int x, int y)
 
     for (int i = 0; i < 7; i++)
     {
-        screenGotoxy(x,y+i);
+        screenGotoxy(x, y + i);
         for (int j = 0; j < 15; j++)
         {
             printf("%c", House[i][j]);
         }
-       
     }
     screenUpdate();
 }
@@ -201,17 +272,17 @@ void drawHealthBar(int x, int y, int health, int maxHealth)
     int filledWidth = (health * barWidth) / maxHealth;
 
     screenGotoxy(x, y);
-    printf("\033[0;31m"); 
+    printf("\033[0;31m");
     for (int i = 0; i < filledWidth; i++)
     {
         printf("█");
     }
-    printf("\033[0;37m"); 
+    printf("\033[0;37m");
     for (int i = filledWidth; i < barWidth; i++)
     {
         printf("█");
     }
-    printf("\033[0m"); 
+    printf("\033[0m");
 }
 
 int main()
@@ -223,13 +294,13 @@ int main()
     int player2Health = 100;
     int player1State = BASE_STATE;
     int player2State = BASE_STATE;
-    int maxHealth=100;
+    int maxHealth = 100;
 
     screenInit(1);
     keyboardInit();
     timerInit(150);
     screenSetColor(WHITE, BLACK);
-    cenario(2, alturaTela - 3);
+    grassFloor(2, alturaTela - 3);
 
     while (ch != 10)
     { // enter
@@ -245,17 +316,17 @@ int main()
             else if (ch == 97)
             { // 'a' move left
                 player1State = BASE_STATE;
-                updatePlayer(&player1X, &player1Y, -1, 0, baseSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, -1, 0, baseSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
             }
             else if (ch == 100)
             { // 'd' move right
                 player1State = BASE_STATE;
-                updatePlayer(&player1X, &player1Y, 1, 0, baseSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, 1, 0, baseSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
                 player1State = ATK_STATE;
-                updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2 , player2Jumping);
+                updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
                 if (player1X + SPRITE_WIDTH == player2X + 1)
                 {
                     player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
@@ -264,7 +335,7 @@ int main()
             else if (ch == 101)
             { // 'e' player 1 defense
                 player1State = DF_STATE;
-                updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, (player2State==BASE_STATE)? baseSprite2:defenseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
             }
             else if (ch == 119 && !player1Jumping)
             { // 'w' player 1 jump
@@ -276,7 +347,7 @@ int main()
             else if (ch == 117)
             { // 'u' player 2 attack
                 player2State = ATK_STATE;
-                updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, (player1State==BASE_STATE)? baseSprite1:defenseSprite1, player1Jumping);
+                updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
                 if (player2X == player1X + SPRITE_WIDTH - 1)
                 {
                     player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
@@ -285,17 +356,17 @@ int main()
             else if (ch == 106)
             { // 'j' move left
                 player2State = BASE_STATE;
-                updatePlayer(&player2X, &player2Y, -1, 0, baseSprite2, player1X, player1Y, (player1State==BASE_STATE)? baseSprite1:defenseSprite1, player1Jumping);
+                updatePlayer(&player2X, &player2Y, -1, 0, baseSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
             }
             else if (ch == 108)
             { // 'l' move right
                 player2State = BASE_STATE;
-                updatePlayer(&player2X, &player2Y, 1, 0, baseSprite2, player1X, player1Y, (player1State==BASE_STATE)? baseSprite1:defenseSprite1, player1Jumping);
+                updatePlayer(&player2X, &player2Y, 1, 0, baseSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
             }
             else if (ch == 111)
             { // 'o' player 2 defense
                 player2State = DF_STATE;
-                updatePlayer(&player2X, &player2Y, 0, 0, defenseSprite2, player1X, player1Y, (player1State==BASE_STATE)? baseSprite1:defenseSprite1, player1Jumping);
+                updatePlayer(&player2X, &player2Y, 0, 0, defenseSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
             }
             else if (ch == 105 && !player2Jumping)
             { // 'i' player 2 jump
@@ -312,24 +383,23 @@ int main()
                 printSprite(player2X, player2Y, baseSprite2);
             }
 
-            drawBamboo(50, alturaTela - 4, ALTURA_BAMBOO, QTD_BAMBOO);
-            drawHouse(25, alturaTela - 10);
+            // drawBamboo(50, alturaTela - 4, ALTURA_BAMBOO, QTD_BAMBOO);
+            drawBackground(2, alturaTela - 18);
+            // drawHouse(25, alturaTela - 10);
             drawHealthBar(10, 5, player1Health, maxHealth);
             drawHealthBar(66, 5, player2Health, maxHealth);
-
-            
 
             handleJump(&player1X, &player1Y, &player1JumpHeight, &player1Jumping, &player1State, baseSprite1);
             handleJump(&player2X, &player2Y, &player2JumpHeight, &player2Jumping, &player2State, baseSprite2);
             if (player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH > player2X && player1X < player2X + SPRITE_WIDTH)
             {
-                clearSprite(player1X,player1Y, SPRITE_WIDTH,SPRITE_HEIGHT);
+                clearSprite(player1X, player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
                 player1X = player2X + SPRITE_WIDTH;
             }
             if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X < player1X + SPRITE_WIDTH)
             {
-                 clearSprite(player2X,player2Y, SPRITE_WIDTH,SPRITE_HEIGHT);
-                player2X = player1X -SPRITE_WIDTH;
+                clearSprite(player2X, player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+                player2X = player1X - SPRITE_WIDTH;
             }
 
             printSprite(player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : (player1State == ATK_STATE) ? attackSprite1

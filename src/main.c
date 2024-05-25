@@ -409,12 +409,12 @@ int main()
                 clearSprite(player1X, player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
                 player1X = player2X - SPRITE_WIDTH+1;
             }
-            if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X +6< player1X + SPRITE_WIDTH)
+            if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X +8< player1X + SPRITE_WIDTH)
             {
                 clearSprite(player2X, player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
                 player2X = player1X - SPRITE_WIDTH;
             }
-            else if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X < player1X + SPRITE_WIDTH)
+            else if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X +4 >= player1X && player2X < player1X + SPRITE_WIDTH)
             {
                 clearSprite(player2X, player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
                 player2X = player1X + SPRITE_WIDTH-1;

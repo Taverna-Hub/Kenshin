@@ -15,6 +15,7 @@
 #define DF_STATE 2
 #define JUMP_STATE 3
 #define MAX_JUMP_HEIGHT 6
+#define ATK_CLWDN 500
 
 #define ALTURA_BAMBOO 10
 #define QTD_BAMBOO 8
@@ -25,6 +26,8 @@ int player2JumpHeight = 0;
 int player1Jumping = 0;
 int player2Jumping = 0;
 int alturaTela = 25;
+int player1LastAttackTime = 0;
+int player2LastAttackTime = 0;
 
 void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
@@ -35,6 +38,12 @@ void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
     }
     screenUpdate();
 }
+int timerGetMilliseconds() {
+    struct timespec spec;
+    clock_gettime(CLOCK_REALTIME, &spec);
+    return spec.tv_sec*1000+spec.tv_nsec/10*10*10*10*10*10;
+}
+
 
 void clearSprite(int x, int y, int width, int height)
 {
@@ -57,7 +66,7 @@ char baseSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
 
 char attackSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', '@', ' ', ' ', ' ', ' ', ' '},
-    {' ', '|', '-', '*', '-', '-', '-'},
+    {' ', '|', '-', '*', '-', '-', ' '},
     {' ', '|', ' ', ' ', ' ', ' ', ' '},
     {'/', ' ', '\\', ' ', ' ', ' ', ' '}};
 
@@ -75,7 +84,7 @@ char baseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
 
 char attackSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', ' ', ' ', ' ', ' ', '@', ' '},
-    {'-', '-', '-', '*', '-', '|', ' '},
+    {' ', '-', '-', '*', '-', '|', ' '},
     {' ', ' ', ' ', ' ', ' ', '|', ' '},
     {' ', ' ', ' ', ' ', '/', ' ', '\\'}};
 
@@ -90,7 +99,7 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if ((*x + dx) < MAXX - SPRITE_WIDTH && (*x + dx) > MINX)
     {
-        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 1+scndX) && (*x < scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 1+scndX) && (*x +2< scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
@@ -288,7 +297,7 @@ int main()
 
     screenInit(1);
     keyboardInit();
-    timerInit(150);
+    timerInit(130);
     screenSetColor(WHITE, BLACK);
     grassFloor(2, alturaTela - 3);
 
@@ -315,11 +324,16 @@ int main()
             }
             else if (ch == 113)
             { // 'q' player 1 attack
-                player1State = ATK_STATE;
-                updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
-                if (player1X + SPRITE_WIDTH == player2X + 1)
+            int currentTime = timerGetMilliseconds();
+                if (currentTime - player1LastAttackTime >= ATK_CLWDN)
                 {
-                    player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
+                    player1LastAttackTime = currentTime;
+                    player1State = ATK_STATE;
+                    updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
+                    if (player1X + SPRITE_WIDTH == player2X + 1)
+                    {
+                        player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
+                    }
                 }
             }
             else if (ch == 101)
@@ -336,11 +350,16 @@ int main()
             // player 2 moveset
             else if (ch == 117)
             { // 'u' player 2 attack
-                player2State = ATK_STATE;
-                updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
-                if (player2X == player1X + SPRITE_WIDTH - 1)
+                int currentTime = timerGetMilliseconds();
+                if (currentTime - player2LastAttackTime >= ATK_CLWDN)
                 {
-                    player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
+                    player2LastAttackTime = currentTime;
+                    player2State = ATK_STATE;
+                    updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
+                    if (player2X == player1X + SPRITE_WIDTH - 1)
+                    {
+                        player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
+                    }
                 }
             }
             else if (ch == 106)
@@ -381,16 +400,26 @@ int main()
 
             handleJump(&player1X, &player1Y, &player1JumpHeight, &player1Jumping, &player1State, baseSprite1);
             handleJump(&player2X, &player2Y, &player2JumpHeight, &player2Jumping, &player2State, baseSprite2);
-            if (player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH > player2X && player1X < player2X + SPRITE_WIDTH)
+            if (player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH-8 > player2X && player1X < player2X + SPRITE_WIDTH)
             {
                 clearSprite(player1X, player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
                 player1X = player2X + SPRITE_WIDTH;
             }
-            if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X < player1X + SPRITE_WIDTH)
+            else if(player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH >2+ player2X && player1X < player2X + SPRITE_WIDTH){
+                clearSprite(player1X, player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+                player1X = player2X - SPRITE_WIDTH+1;
+            }
+            if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X +6< player1X + SPRITE_WIDTH)
             {
                 clearSprite(player2X, player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
                 player2X = player1X - SPRITE_WIDTH;
             }
+            else if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X < player1X + SPRITE_WIDTH)
+            {
+                clearSprite(player2X, player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+                player2X = player1X + SPRITE_WIDTH-1;
+            }
+            
 
             printSprite(player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : (player1State == ATK_STATE) ? attackSprite1
                                                                                      : (player1State == DF_STATE)    ? defenseSprite1

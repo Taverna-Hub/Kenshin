@@ -445,6 +445,10 @@ int main()
             printSprite(player2X,player2Y,*player2Sprite);
 
             }
+            else{
+                 printSprite(player1X,player1Y,*player1Sprite);
+            printSprite(player2X,player2Y,*player2Sprite);
+            }
             if (player1Health <= 0)
             {
                 printf("Player 1 has died. Game over.\n");

@@ -15,7 +15,7 @@
 #define DF_STATE 2
 #define JUMP_STATE 3
 #define MAX_JUMP_HEIGHT 6
-#define ATK_CLWDN 500
+#define ATK_CLWDN 130
 
 #define ALTURA_BAMBOO 10
 #define QTD_BAMBOO 8
@@ -28,7 +28,6 @@ int player2Jumping = 0;
 int alturaTela = 25;
 int player1LastAttackTime = 0;
 int player2LastAttackTime = 0;
-
 void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
     for (int i = 0; i < SPRITE_HEIGHT; i++)
@@ -143,6 +142,19 @@ void grassFloor(int x, int y)
         {
             printf(" ");
         }
+    }
+}
+void updateSprites(int player1X, int player2X, char (**sprite1)[SPRITE_HEIGHT][SPRITE_WIDTH + 1], char (**sprite2)[SPRITE_HEIGHT][SPRITE_WIDTH + 1], int player1State, int player2State)
+{
+    if (player1X < player2X)
+    {
+        *sprite1 = (player1State == BASE_STATE) ? &baseSprite1 : (player1State == ATK_STATE) ? &attackSprite1 : &defenseSprite1;
+        *sprite2 = (player2State == BASE_STATE) ? &baseSprite2 : (player2State == ATK_STATE) ? &attackSprite2 : &defenseSprite2;
+    }
+    else
+    {
+        *sprite1 = (player1State == BASE_STATE) ? &baseSprite2 : (player1State == ATK_STATE) ? &attackSprite2 : &defenseSprite2;
+        *sprite2 = (player2State == BASE_STATE) ? &baseSprite1 : (player2State == ATK_STATE) ? &attackSprite1 : &defenseSprite1;
     }
 }
 void drawBackground(int x, int y)
@@ -294,10 +306,12 @@ int main()
     int player1State = BASE_STATE;
     int player2State = BASE_STATE;
     int maxHealth = 100;
+    char (*player1Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite1;
+    char (*player2Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite2;
 
     screenInit(1);
     keyboardInit();
-    timerInit(130);
+    timerInit(120);
     screenSetColor(WHITE, BLACK);
     grassFloor(2, alturaTela - 3);
 
@@ -315,12 +329,12 @@ int main()
             else if (ch == 97)
             { // 'a' move left
                 player1State = BASE_STATE;
-                updatePlayer(&player1X, &player1Y, -1, 0, baseSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, -1, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
             }
             else if (ch == 100)
             { // 'd' move right
                 player1State = BASE_STATE;
-                updatePlayer(&player1X, &player1Y, 1, 0, baseSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, 1, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
             }
             else if (ch == 113)
             { // 'q' player 1 attack
@@ -329,7 +343,7 @@ int main()
                 {
                     player1LastAttackTime = currentTime;
                     player1State = ATK_STATE;
-                    updatePlayer(&player1X, &player1Y, 0, 0, attackSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
+                    updatePlayer(&player1X, &player1Y, 0, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
                     if (player1X + SPRITE_WIDTH == player2X + 1)
                     {
                         player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
@@ -339,12 +353,12 @@ int main()
             else if (ch == 101)
             { // 'e' player 1 defense
                 player1State = DF_STATE;
-                updatePlayer(&player1X, &player1Y, 0, 0, defenseSprite1, player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : defenseSprite2, player2Jumping);
+                updatePlayer(&player1X, &player1Y, 0, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
             }
             else if (ch == 119 && !player1Jumping)
             { // 'w' player 1 jump
                 player1Jumping = 1;
-                player1State = JUMP_STATE;
+              
             }
 
             // player 2 moveset
@@ -355,7 +369,7 @@ int main()
                 {
                     player2LastAttackTime = currentTime;
                     player2State = ATK_STATE;
-                    updatePlayer(&player2X, &player2Y, 0, 0, attackSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
+                    updatePlayer(&player2X, &player2Y, 0, 0, *player2Sprite, player1X, player1Y, *player1Sprite, player1Jumping);
                     if (player2X == player1X + SPRITE_WIDTH - 1)
                     {
                         player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
@@ -365,22 +379,22 @@ int main()
             else if (ch == 106)
             { // 'j' move left
                 player2State = BASE_STATE;
-                updatePlayer(&player2X, &player2Y, -1, 0, baseSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
+                updatePlayer(&player2X, &player2Y, -1, 0, *player2Sprite, player1X, player1Y, *player1Sprite, player1Jumping);
             }
             else if (ch == 108)
             { // 'l' move right
                 player2State = BASE_STATE;
-                updatePlayer(&player2X, &player2Y, 1, 0, baseSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
+                updatePlayer(&player2X, &player2Y, 1, 0, *player2Sprite, player1X, player1Y, *player1Sprite, player1Jumping);
             }
             else if (ch == 111)
             { // 'o' player 2 defense
                 player2State = DF_STATE;
-                updatePlayer(&player2X, &player2Y, 0, 0, defenseSprite2, player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : defenseSprite1, player1Jumping);
+                updatePlayer(&player2X, &player2Y, 0, 0, *player2Sprite, player1X, player1Y, *player1Sprite, player1Jumping);
             }
             else if (ch == 105 && !player2Jumping)
             { // 'i' player 2 jump
                 player2Jumping = 1;
-                player2State = JUMP_STATE;
+                
             }
         }
 
@@ -420,14 +434,9 @@ int main()
                 player2X = player1X + SPRITE_WIDTH-1;
             }
             
-
-            printSprite(player1X, player1Y, (player1State == BASE_STATE) ? baseSprite1 : (player1State == ATK_STATE) ? attackSprite1
-                                                                                     : (player1State == DF_STATE)    ? defenseSprite1
-                                                                                                                     : baseSprite1);
-            printSprite(player2X, player2Y, (player2State == BASE_STATE) ? baseSprite2 : (player2State == ATK_STATE) ? attackSprite2
-                                                                                     : (player2State == DF_STATE)    ? defenseSprite2
-                                                                                                                     : baseSprite2);
-
+            updateSprites(player1X, player2X, &player1Sprite, &player2Sprite, player1State, player2State);
+            printSprite(player1X,player1Y,*player1Sprite);
+            printSprite(player2X,player2Y,*player2Sprite);
             if (player1Health <= 0)
             {
                 printf("Player 1 has died. Game over.\n");

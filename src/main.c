@@ -58,22 +58,22 @@ void clearSprite(int x, int y, int width, int height)
 }
 
 char baseSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
-    {' ', '@', ' ', ' ', '/', ' '},
-    {' ', '|', '=', '/', ' ', ' '},
-    {' ', '|', ' ', ' ', ' ', ' '},
-    {'/', ' ', '\\', ' ', ' ', ' '}};
+    {' ', '@', ' ', ' ', '/', ' ',' '},
+    {' ', '|', '=', '/', ' ', ' ',' '},
+    {' ', '|', ' ', ' ', ' ', ' ', ' '},
+    {'/', ' ', '\\', ' ', ' ', ' ',' '}};
 
 char attackSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', '@', ' ', ' ', ' ', ' ', ' '},
-    {' ', '|', '-', '*', '-', '-', ' '},
+    {' ', '|', '-', '*', '-', '-', '-'},
     {' ', '|', ' ', ' ', ' ', ' ', ' '},
     {'/', ' ', '\\', ' ', ' ', ' ', ' '}};
 
 char defenseSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
-    {' ', '@', ' ', '|', ' ', ' '},
-    {' ', '|', '=', '|', ' ', ' '},
-    {' ', '|', ' ', ' ', ' ', ' '},
-    {'/', ' ', '\\', ' ', ' ', ' '}};
+    {' ', '@', ' ', '|', ' ', ' ', ' '},
+    {' ', '|', '=', '|', ' ', ' ', ' '},
+    {' ', '|', ' ', ' ', ' ', ' ', ' '},
+    {'/', ' ', '\\', ' ', ' ', ' ', ' '}};
 
 char baseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', ' ', '\\', ' ', ' ', '@', ' '},
@@ -83,7 +83,7 @@ char baseSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
 
 char attackSprite2[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', ' ', ' ', ' ', ' ', '@', ' '},
-    {' ', '-', '-', '*', '-', '|', ' '},
+    {'-', '-', '-', '*', '-', '|', ' '},
     {' ', ' ', ' ', ' ', ' ', '|', ' '},
     {' ', ' ', ' ', ' ', '/', ' ', '\\'}};
 
@@ -98,11 +98,11 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if ((*x + dx) < MAXX - SPRITE_WIDTH && (*x + dx) > MINX)
     {
-        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 1+scndX) && (*x +2< scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 2+scndX) && (*x +2< scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
-        else if (dx < 0 && (*x + dx < scndX + SPRITE_WIDTH - 1) && (*x > scndX) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        else if (dx < 0 && (*x + dx < scndX + SPRITE_WIDTH - 2) && (*x > scndX) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
@@ -311,7 +311,7 @@ int main()
 
     screenInit(1);
     keyboardInit();
-    timerInit(120);
+    timerInit(180);
     screenSetColor(WHITE, BLACK);
     grassFloor(2, alturaTela - 3);
 
@@ -344,7 +344,7 @@ int main()
                     player1LastAttackTime = currentTime;
                     player1State = ATK_STATE;
                     updatePlayer(&player1X, &player1Y, 0, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
-                    if (player1X + SPRITE_WIDTH == player2X + 1)
+                    if (player1X + SPRITE_WIDTH == player2X + 1 || player1X == player2X + SPRITE_WIDTH - 1)
                     {
                         player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
                     }
@@ -370,7 +370,7 @@ int main()
                     player2LastAttackTime = currentTime;
                     player2State = ATK_STATE;
                     updatePlayer(&player2X, &player2Y, 0, 0, *player2Sprite, player1X, player1Y, *player1Sprite, player1Jumping);
-                    if (player2X == player1X + SPRITE_WIDTH - 1)
+                    if (player2X == player1X + SPRITE_WIDTH - 1 || player2X + SPRITE_WIDTH == player1X + 1)
                     {
                         player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
                     }
@@ -435,8 +435,16 @@ int main()
             }
             
             updateSprites(player1X, player2X, &player1Sprite, &player2Sprite, player1State, player2State);
-            printSprite(player1X,player1Y,*player1Sprite);
+            if (player1State == ATK_STATE){
             printSprite(player2X,player2Y,*player2Sprite);
+            printSprite(player1X,player1Y,*player1Sprite);
+
+            }
+            else if (player2State==ATK_STATE){
+                 printSprite(player1X,player1Y,*player1Sprite);
+            printSprite(player2X,player2Y,*player2Sprite);
+
+            }
             if (player1Health <= 0)
             {
                 printf("Player 1 has died. Game over.\n");

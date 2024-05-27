@@ -393,9 +393,32 @@ void displayHallOfFame(struct HallOfFameEntry* head) {
     int i = 8;
     while (temp != NULL) {
         screenGotoxy(30, i);
-        printf("%s is a true 人斬", temp->name);
+         printf("%s is a true \033[0;31m人斬\033[0m", temp->name);
         temp = temp->next;
         i++;
+    }
+}
+void enterName(char* playerName, int x, int y) {
+    int ch;
+    int pos = 0;
+
+    screenGotoxy(x, y);
+    printf("%s", playerName);
+
+    while ((ch = getchar()) != '\n' && pos < 49) {
+        if (ch==127) {  
+            if (pos > 0) {
+                playerName[--pos] = '\0';
+                screenGotoxy(x + pos, y);
+                printf(" ");
+                screenGotoxy(x + pos, y);
+            }
+        } else {
+            playerName[pos++] = ch;
+            playerName[pos] = '\0';
+            screenGotoxy(x + pos - 1, y);
+            printf("%c", ch);
+        }
     }
 }
 
@@ -415,14 +438,13 @@ int main()
     loadHallOfFame(&head);
     screenInit(0);
     
-    screenHideCursor();
+    
 
     keyboardInit();
 
     system("clear");
     screenSetColor(LIGHTRED, DARKGRAY);
     printf("%s\n", logo);
-
     printf("%s\n\n\n", kenshin);
 
     screenSetColor(LIGHTRED, DARKGRAY);
@@ -432,11 +454,17 @@ int main()
     printf("%s\n", instructions);
     printf("%s\n", openHOF);
 
-    printf("Enter Player 1 Name: \n");
-    scanf("%s", player1Name);
-    printf("Enter Player 2 Name: \n");
-    scanf("%s", player2Name);
-
+    screenShowCursor();
+    screenGotoxy(33,31);
+    printf("Enter Player 1 Name: ");
+    enterName(player1Name, 53, 31);
+    screenGotoxy(33,32);
+    printf("Enter Player 2 Name: ");
+    enterName(player2Name, 53, 32);
+    screenHideCursor();
+    screenGotoxy(33,34);
+    printf("Ready to slaughter...");
+    screenUpdate();
     while (ch != 32) {
         if (keyhit())
         {
@@ -446,7 +474,7 @@ int main()
             menuInstructions = 1;
             break;
         }
-        if(ch == 76 || ch == 108) {
+        if(ch == 72 || ch == 104) {
             menuHOF = 1;
             break;
         }
@@ -485,7 +513,7 @@ int main()
         screenGotoxy(40, 35);
         printf("Second player's lateral movement: J and L.");
         screenGotoxy(40, 36);
-        printf("Deplete your enemy's life to win.");
+        printf("Deplete your enemy's life to win the round.");
 
         
         printf("\n\n          %s\n\n", start);
@@ -497,7 +525,7 @@ int main()
     }
     if (openHOF){
         screenInit(0);
-        screenSetColor(RED, DARKGRAY);
+        screenSetColor(LIGHTGRAY, DARKGRAY);
     
         displayHallOfFame(head);
         printf("\n\n          %s\n\n", start);
@@ -679,6 +707,7 @@ int main()
 
  
 
+    screenShowCursor();
     screenDestroy();
     keyboardDestroy();
     timerDestroy();

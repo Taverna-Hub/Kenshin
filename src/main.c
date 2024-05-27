@@ -31,7 +31,28 @@ int player1LastAttackTime = 0;
 int player2LastAttackTime = 0;
 int menuHOF = 0;
 int menuInstructions = 0;
+char player1Name[50];
+char player2Name[50];
+int player1Score = 0;
+int player2Score = 0;
+struct HallOfFameEntry {
+    char name[50];
+    struct HallOfFameEntry* next;
+};
 
+struct HallOfFameEntry* head = NULL;
+void drawRound(int round)
+{
+    screenGotoxy(57, 2);
+    printf("Round %d", round);
+}
+void drawScores()
+{
+    screenGotoxy(5, 5);
+    printf("Rounds won: %d", player1Score);
+    screenGotoxy(71, 5);
+    printf("Rounds won: %d", player2Score);
+}
 void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
     for (int i = 0; i < SPRITE_HEIGHT; i++)
@@ -252,6 +273,14 @@ void drawBamboo(int x, int y, int altura, int quantidade)
     }
     printf("\033[0m"); // Reseta a cor
 }
+void drawPlayerNames()
+{
+    screenGotoxy(5, 3);
+    printf("%s", player1Name);
+    screenGotoxy(71, 3);
+    printf("%s", player2Name);
+}
+
 
 void handleJump(int *playerX, int *playerY, int *jumpHeight, int *jumping, int *state, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
@@ -299,19 +328,91 @@ void drawHealthBar(int x, int y, int health, int maxHealth)
     }
     printf("\033[0m");
 }
+void resetPlayers(int *player1X, int *player1Y, int *player2X, int *player2Y, int *player1Health, int *player2Health)
+{
+    clearSprite(*player1X, *player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+    clearSprite(*player2X, *player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+    *player1X = 34;
+    *player1Y = 18;
+    *player2X = 80;
+    *player2Y = 18;
+    *player1Health = 100;
+    *player2Health = 100;
+    screenUpdate();
+}
+
+void addEntryToFile(struct HallOfFameEntry** head, char* name) {
+    struct HallOfFameEntry* newEntry = (struct HallOfFameEntry*)malloc(sizeof(struct HallOfFameEntry));
+    strcpy(newEntry->name, name);
+    newEntry->next = NULL;
+
+    if (*head == NULL) {
+        *head = newEntry;
+    } else {
+        struct HallOfFameEntry* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newEntry;
+    }
+
+    FILE* file = fopen("hall_of_fame.txt", "a");
+    if (file != NULL) {
+        fprintf(file, "%s\n", name);
+        fclose(file);
+    }
+}
+
+void loadHallOfFame(struct HallOfFameEntry** head) {
+    FILE* file = fopen("hall_of_fame.txt", "r");
+    if (file != NULL) {
+        char name[50];
+        while (fscanf(file, "%s", name) != EOF) {
+            struct HallOfFameEntry* newEntry = (struct HallOfFameEntry*)malloc(sizeof(struct HallOfFameEntry));
+            strcpy(newEntry->name, name);
+            newEntry->next = NULL;
+
+            if (*head == NULL) {
+                *head = newEntry;
+            } else {
+                struct HallOfFameEntry* temp = *head;
+                while (temp->next != NULL) {
+                    temp = temp->next;
+                }
+                temp->next = newEntry;
+            }
+        }
+        fclose(file);
+    }
+}
+
+void displayHallOfFame(struct HallOfFameEntry* head) {
+    struct HallOfFameEntry* temp = head;
+    screenGotoxy(30, 6);
+    printf("Hall of Fame");
+    int i = 8;
+    while (temp != NULL) {
+        screenGotoxy(30, i);
+        printf("%s is a true 人斬", temp->name);
+        temp = temp->next;
+        i++;
+    }
+}
 
 int main()
 {
     int ch = 0;
-    int player1X = 17, player1Y = 18;
-    int player2X = 56, player2Y = 18;
+    int player1X =34, player1Y = 18;
+    int player2X = 80, player2Y = 18;
     int player1Health = 100;
     int player2Health = 100;
     int player1State = BASE_STATE;
     int player2State = BASE_STATE;
     int maxHealth = 100;
+    int rounds = 0;
     char (*player1Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite1;
     char (*player2Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite2;
+    loadHallOfFame(&head);
     screenInit(0);
     
     screenHideCursor();
@@ -319,7 +420,7 @@ int main()
     keyboardInit();
 
     system("clear");
-    screenSetColor(RED, DARKGRAY);
+    screenSetColor(LIGHTRED, DARKGRAY);
     printf("%s\n", logo);
 
     printf("%s\n\n\n", kenshin);
@@ -329,6 +430,12 @@ int main()
     
     screenSetColor(LIGHTRED, DARKGRAY);
     printf("%s\n", instructions);
+    printf("%s\n", openHOF);
+
+    printf("Enter Player 1 Name: \n");
+    scanf("%s", player1Name);
+    printf("Enter Player 2 Name: \n");
+    scanf("%s", player2Name);
 
     while (ch != 32) {
         if (keyhit())
@@ -388,14 +495,26 @@ int main()
             }
         }
     }
+    if (openHOF){
+        screenInit(0);
+        screenSetColor(RED, DARKGRAY);
+    
+        displayHallOfFame(head);
+        printf("\n\n          %s\n\n", start);
+        while (ch != 32) {
+            if (keyhit()) {
+                ch = readch();
+            }
+        }
+    }
     screenSetColor(WHITE, DARKGRAY);
     screenInit(1);
     keyboardInit();
     timerInit(180);
     screenSetColor(WHITE, BLACK);
     grassFloor(2, alturaTela - 3);
-
-    while (ch != 10)
+    
+    while (ch != 10&& rounds<3)
     { // enter
         if (keyhit())
         {
@@ -489,8 +608,11 @@ int main()
             // drawBamboo(50, alturaTela - 4, ALTURA_BAMBOO, QTD_BAMBOO);
             drawBackground(2, alturaTela - 18);
             // drawHouse(25, alturaTela - 10);
-            drawHealthBar(10, 3, player1Health, maxHealth);
-            drawHealthBar(66, 3, player2Health, maxHealth);
+            drawPlayerNames();
+            drawRound(rounds);
+            drawScores();
+            drawHealthBar(5, 4, player1Health, maxHealth);
+            drawHealthBar(71, 4, player2Health, maxHealth);
 
             handleJump(&player1X, &player1Y, &player1JumpHeight, &player1Jumping, &player1State, baseSprite1);
             handleJump(&player2X, &player2Y, &player2JumpHeight, &player2Jumping, &player2State, baseSprite2);
@@ -531,13 +653,15 @@ int main()
             }
             if (player1Health <= 0)
             {
-                printf("Player 1 has died. Game over.\n");
-                break;
+                player2Score++;
+                rounds++;
+                resetPlayers(&player1X, &player1Y, &player2X, &player2Y, &player1Health, &player2Health);
             }
             else if (player2Health <= 0)
             {
-                printf("Player 2 has died. Game over.\n");
-                break;
+                player1Score++;
+                rounds++;
+                resetPlayers(&player1X, &player1Y, &player2X, &player2Y, &player1Health, &player2Health);
             }
             if (player1State == ATK_STATE && !player1Jumping)
                 player1State = BASE_STATE;
@@ -546,6 +670,14 @@ int main()
             timer++;
         }
     }
+    if (player1Score == 3) {
+        addEntryToFile(&head,player1Name);
+    } else if (player2Score == 3) {
+        
+        addEntryToFile(&head,player2Name);
+    }
+
+ 
 
     screenDestroy();
     keyboardDestroy();

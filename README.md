@@ -44,16 +44,16 @@ O jogo possui 3 "movimentações" principais:
         <a href="https://github.com/viniciusdandrade">
         <div  
           style="border: 3px solid #7f1d1d; border-radius: 50%; width: 115px; height: 115px; display: flex; align-items: center; justify-content: center;">
-            <img src="" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Vinicius"/>
+            <img src="https://github.com/Taverna-Hub/KenshinGame/blob/622efda3163792adf2ff7d4f066d504446a544be/viniciuskenshin.png" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Vinicius"/>
         </div>
             <br />
             <sub style="font-size:14px"><b>Vinicius Andrade</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href="https://github.com/Kaiquegb">
+        <a href="https://github.com/n3waz">
             <div style="border: 3px solid #7f1d1d; border-radius: 50%; width: 115px; height: 115px; display: flex; align-items: center; justify-content: center;">
-              <img src="" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Kato"/>
+              <img src="https://github.com/Taverna-Hub/KenshinGame/blob/622efda3163792adf2ff7d4f066d504446a544be/luankenshin.png" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Kato"/>
             </div>
             <br />
             <sub style="font-size:14px;"><b>Luan Kato</b></sub>
@@ -63,7 +63,7 @@ O jogo possui 3 "movimentações" principais:
         <a href="https://github.com/ViniciusFreitas2801">
         <div  
           style="border: 3px solid #7f1d1d; border-radius: 50%; width: 115px; height: 115px; display: flex; align-items: center; justify-content: center;">
-            <img src="" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Cookie"/>
+            <img src="https://github.com/Taverna-Hub/KenshinGame/blob/622efda3163792adf2ff7d4f066d504446a544be/vinicookiekenshin.png" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Cookie"/>
         </div>
             <br />
             <sub style="font-size:14px"><b>Vinicius Freitas</b></sub>

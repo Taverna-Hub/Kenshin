@@ -35,12 +35,13 @@ char player1Name[50];
 char player2Name[50];
 int player1Score = 0;
 int player2Score = 0;
-struct HallOfFameEntry {
+struct HallOfFameEntry
+{
     char name[50];
-    struct HallOfFameEntry* next;
+    struct HallOfFameEntry *next;
 };
 
-struct HallOfFameEntry* head = NULL;
+struct HallOfFameEntry *head = NULL;
 void drawRound(int round)
 {
     screenGotoxy(57, 2);
@@ -65,9 +66,8 @@ void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 int timerGetMilliseconds() {
     struct timespec spec;
     clock_gettime(CLOCK_REALTIME, &spec);
-    return spec.tv_sec*1000+spec.tv_nsec/10*10*10*10*10*10;
+    return spec.tv_sec * 1000 + spec.tv_nsec / 10 * 10 * 10 * 10 * 10 * 10;
 }
-
 
 void clearSprite(int x, int y, int width, int height)
 {
@@ -83,10 +83,10 @@ void clearSprite(int x, int y, int width, int height)
 }
 
 char baseSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
-    {' ', '@', ' ', ' ', '/', ' ',' '},
-    {' ', '|', '=', '/', ' ', ' ',' '},
+    {' ', '@', ' ', ' ', '/', ' ', ' '},
+    {' ', '|', '=', '/', ' ', ' ', ' '},
     {' ', '|', ' ', ' ', ' ', ' ', ' '},
-    {'/', ' ', '\\', ' ', ' ', ' ',' '}};
+    {'/', ' ', '\\', ' ', ' ', ' ', ' '}};
 
 char attackSprite1[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = {
     {' ', '@', ' ', ' ', ' ', ' ', ' '},
@@ -123,7 +123,7 @@ void updatePlayer(int *x, int *y, int dx, int dy, char sprite[SPRITE_HEIGHT][SPR
     clearSprite(*x, *y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if ((*x + dx) < MAXX - SPRITE_WIDTH && (*x + dx) > MINX)
     {
-        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 2+scndX) && (*x +2< scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
+        if (dx > 0 && (*x + SPRITE_WIDTH + dx > 2 + scndX) && (*x + 2 < scndX + SPRITE_WIDTH) && !(*y + dy + 2 < scndY) && !(scndJumping && *y + dy >= scndY + SPRITE_HEIGHT))
         {
             dx = 0;
         }
@@ -171,15 +171,19 @@ void grassFloor(int x, int y)
 }
 void updateSprites(int player1X, int player2X, char (**sprite1)[SPRITE_HEIGHT][SPRITE_WIDTH + 1], char (**sprite2)[SPRITE_HEIGHT][SPRITE_WIDTH + 1], int player1State, int player2State)
 {
-    if (player1X-2 < player2X)
+    if (player1X - 2 < player2X)
     {
-        *sprite1 = (player1State == BASE_STATE) ? &baseSprite1 : (player1State == ATK_STATE) ? &attackSprite1 : &defenseSprite1;
-        *sprite2 = (player2State == BASE_STATE) ? &baseSprite2 : (player2State == ATK_STATE) ? &attackSprite2 : &defenseSprite2;
+        *sprite1 = (player1State == BASE_STATE) ? &baseSprite1 : (player1State == ATK_STATE) ? &attackSprite1
+                                                                                             : &defenseSprite1;
+        *sprite2 = (player2State == BASE_STATE) ? &baseSprite2 : (player2State == ATK_STATE) ? &attackSprite2
+                                                                                             : &defenseSprite2;
     }
     else
     {
-        *sprite1 = (player1State == BASE_STATE) ? &baseSprite2 : (player1State == ATK_STATE) ? &attackSprite2 : &defenseSprite2;
-        *sprite2 = (player2State == BASE_STATE) ? &baseSprite1 : (player2State == ATK_STATE) ? &attackSprite1 : &defenseSprite1;
+        *sprite1 = (player1State == BASE_STATE) ? &baseSprite2 : (player1State == ATK_STATE) ? &attackSprite2
+                                                                                             : &defenseSprite2;
+        *sprite2 = (player2State == BASE_STATE) ? &baseSprite1 : (player2State == ATK_STATE) ? &attackSprite1
+                                                                                             : &defenseSprite1;
     }
 }
 void drawBackground(int x, int y)
@@ -281,7 +285,6 @@ void drawPlayerNames()
     printf("%s", player2Name);
 }
 
-
 void handleJump(int *playerX, int *playerY, int *jumpHeight, int *jumping, int *state, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
 {
     clearSprite(*playerX, *playerY, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -341,42 +344,55 @@ void resetPlayers(int *player1X, int *player1Y, int *player2X, int *player2Y, in
     screenUpdate();
 }
 
-void addEntryToFile(struct HallOfFameEntry** head, char* name) {
-    struct HallOfFameEntry* newEntry = (struct HallOfFameEntry*)malloc(sizeof(struct HallOfFameEntry));
+void addEntryToFile(struct HallOfFameEntry **head, char *name)
+{
+    struct HallOfFameEntry *newEntry = (struct HallOfFameEntry *)malloc(sizeof(struct HallOfFameEntry));
     strcpy(newEntry->name, name);
     newEntry->next = NULL;
 
-    if (*head == NULL) {
+    if (*head == NULL)
+    {
         *head = newEntry;
-    } else {
-        struct HallOfFameEntry* temp = *head;
-        while (temp->next != NULL) {
+    }
+    else
+    {
+        struct HallOfFameEntry *temp = *head;
+        while (temp->next != NULL)
+        {
             temp = temp->next;
         }
         temp->next = newEntry;
     }
 
-    FILE* file = fopen("hall_of_fame.txt", "a");
-    if (file != NULL) {
+    FILE *file = fopen("hall_of_fame.txt", "a");
+    if (file != NULL)
+    {
         fprintf(file, "%s\n", name);
         fclose(file);
     }
 }
 
-void loadHallOfFame(struct HallOfFameEntry** head) {
-    FILE* file = fopen("hall_of_fame.txt", "r");
-    if (file != NULL) {
+void loadHallOfFame(struct HallOfFameEntry **head)
+{
+    FILE *file = fopen("hall_of_fame.txt", "r");
+    if (file != NULL)
+    {
         char name[50];
-        while (fscanf(file, "%s", name) != EOF) {
-            struct HallOfFameEntry* newEntry = (struct HallOfFameEntry*)malloc(sizeof(struct HallOfFameEntry));
+        while (fscanf(file, "%s", name) != EOF)
+        {
+            struct HallOfFameEntry *newEntry = (struct HallOfFameEntry *)malloc(sizeof(struct HallOfFameEntry));
             strcpy(newEntry->name, name);
             newEntry->next = NULL;
 
-            if (*head == NULL) {
+            if (*head == NULL)
+            {
                 *head = newEntry;
-            } else {
-                struct HallOfFameEntry* temp = *head;
-                while (temp->next != NULL) {
+            }
+            else
+            {
+                struct HallOfFameEntry *temp = *head;
+                while (temp->next != NULL)
+                {
                     temp = temp->next;
                 }
                 temp->next = newEntry;
@@ -386,12 +402,14 @@ void loadHallOfFame(struct HallOfFameEntry** head) {
     }
 }
 
-void displayHallOfFame(struct HallOfFameEntry* head) {
-    struct HallOfFameEntry* temp = head;
+void displayHallOfFame(struct HallOfFameEntry *head)
+{
+    struct HallOfFameEntry *temp = head;
     screenGotoxy(30, 6);
     printf("Hall of Fame");
     int i = 8;
-    while (temp != NULL) {
+    while (temp != NULL)
+    {
         screenGotoxy(30, i);
         printf("%s is a true 人斬", temp->name);
         temp = temp->next;
@@ -402,7 +420,7 @@ void displayHallOfFame(struct HallOfFameEntry* head) {
 int main()
 {
     int ch = 0;
-    int player1X =34, player1Y = 18;
+    int player1X = 34, player1Y = 18;
     int player2X = 80, player2Y = 18;
     int player1Health = 100;
     int player2Health = 100;
@@ -410,11 +428,11 @@ int main()
     int player2State = BASE_STATE;
     int maxHealth = 100;
     int rounds = 0;
-    char (*player1Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite1;
-    char (*player2Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite2;
+    char(*player1Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite1;
+    char(*player2Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite2;
     loadHallOfFame(&head);
     screenInit(0);
-    
+
     screenHideCursor();
 
     keyboardInit();
@@ -427,7 +445,7 @@ int main()
 
     screenSetColor(LIGHTRED, DARKGRAY);
     printf("%s\n\n", start);
-    
+
     screenSetColor(LIGHTRED, DARKGRAY);
     printf("%s\n", instructions);
     printf("%s\n", openHOF);
@@ -437,24 +455,27 @@ int main()
     printf("Enter Player 2 Name: \n");
     scanf("%s", player2Name);
 
-    while (ch != 32) {
+    while (ch != 32)
+    {
         if (keyhit())
         {
             ch = readch();
         }
-        if (ch == 73 || ch == 105) {
+        if (ch == 73 || ch == 105)
+        {
             menuInstructions = 1;
             break;
         }
-        if(ch == 76 || ch == 108) {
+        if (ch == 76 || ch == 108)
+        {
             menuHOF = 1;
             break;
         }
     }
-     if (menuInstructions) {
+    if (menuInstructions)
+    {
         screenInit(0);
         screenSetColor(RED, DARKGRAY);
-    
 
         screenSetColor(LIGHTRED, DARKGRAY);
         screenGotoxy(30, 6);
@@ -479,7 +500,7 @@ int main()
         screenGotoxy(80, 26);
         printf("Press O to defend: ");
         printSprite(84, 28, defenseSprite2);
-        
+
         screenGotoxy(40, 34);
         printf("First player's lateral movement: A and D.");
         screenGotoxy(40, 35);
@@ -487,22 +508,26 @@ int main()
         screenGotoxy(40, 36);
         printf("Deplete your enemy's life to win.");
 
-        
         printf("\n\n          %s\n\n", start);
-        while (ch != 32) {
-            if (keyhit()) {
+        while (ch != 32)
+        {
+            if (keyhit())
+            {
                 ch = readch();
             }
         }
     }
-    if (openHOF){
+    if (openHOF)
+    {
         screenInit(0);
         screenSetColor(RED, DARKGRAY);
-    
+
         displayHallOfFame(head);
         printf("\n\n          %s\n\n", start);
-        while (ch != 32) {
-            if (keyhit()) {
+        while (ch != 32)
+        {
+            if (keyhit())
+            {
                 ch = readch();
             }
         }
@@ -513,8 +538,8 @@ int main()
     timerInit(180);
     screenSetColor(WHITE, BLACK);
     grassFloor(2, alturaTela - 3);
-    
-    while (ch != 10&& rounds<3)
+
+    while (ch != 10 && rounds < 3)
     { // enter
         if (keyhit())
         {
@@ -537,13 +562,13 @@ int main()
             }
             else if (ch == 113)
             { // 'q' player 1 attack
-            int currentTime = timerGetMilliseconds();
+                int currentTime = timerGetMilliseconds();
                 if (currentTime - player1LastAttackTime >= ATK_CLWDN)
                 {
                     player1LastAttackTime = currentTime;
                     player1State = ATK_STATE;
                     updatePlayer(&player1X, &player1Y, 0, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
-                    if (player1X + SPRITE_WIDTH == player2X +2  || player1X == player2X + SPRITE_WIDTH - 2)
+                    if (player1X + SPRITE_WIDTH == player2X + 2 || player1X == player2X + SPRITE_WIDTH - 2)
                     {
                         player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
                     }
@@ -557,7 +582,6 @@ int main()
             else if (ch == 119 && !player1Jumping)
             { // 'w' player 1 jump
                 player1Jumping = 1;
-              
             }
 
             // player 2 moveset
@@ -593,7 +617,6 @@ int main()
             else if (ch == 105 && !player2Jumping)
             { // 'i' player 2 jump
                 player2Jumping = 1;
-                
             }
         }
 
@@ -616,40 +639,42 @@ int main()
 
             handleJump(&player1X, &player1Y, &player1JumpHeight, &player1Jumping, &player1State, baseSprite1);
             handleJump(&player2X, &player2Y, &player2JumpHeight, &player2Jumping, &player2State, baseSprite2);
-            if (player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH-8 > player2X && player1X < player2X + SPRITE_WIDTH)
+            if (player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH - 8 > player2X && player1X < player2X + SPRITE_WIDTH)
             {
                 clearSprite(player1X, player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
-                player1X = player2X + SPRITE_WIDTH-2;
+                player1X = player2X + SPRITE_WIDTH - 2;
             }
-            else if(player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH >2+ player2X && player1X < player2X + SPRITE_WIDTH){
+            else if (player1Jumping && player1Y + SPRITE_HEIGHT > player2Y && player1X + SPRITE_WIDTH > 2 + player2X && player1X < player2X + SPRITE_WIDTH)
+            {
                 clearSprite(player1X, player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
-                player1X = player2X - SPRITE_WIDTH+2;
+                player1X = player2X - SPRITE_WIDTH + 2;
             }
-            if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X +8< player1X + SPRITE_WIDTH)
+            if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + SPRITE_WIDTH > player1X && player2X + 8 < player1X + SPRITE_WIDTH)
             {
                 clearSprite(player2X, player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
-                player2X = player1X - SPRITE_WIDTH+2;
+                player2X = player1X - SPRITE_WIDTH + 2;
             }
-            else if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X +4 >= player1X && player2X < player1X + SPRITE_WIDTH)
+            else if (player2Jumping && player2Y + SPRITE_HEIGHT > player1Y && player2X + 4 >= player1X && player2X < player1X + SPRITE_WIDTH)
             {
                 clearSprite(player2X, player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
-                player2X = player1X + SPRITE_WIDTH-2;
+                player2X = player1X + SPRITE_WIDTH - 2;
             }
-            
+
             updateSprites(player1X, player2X, &player1Sprite, &player2Sprite, player1State, player2State);
-            if (player1State == ATK_STATE){
-                printSprite(player2X,player2Y,*player2Sprite);
-                printSprite(player1X,player1Y,*player1Sprite);
-
+            if (player1State == ATK_STATE)
+            {
+                printSprite(player2X, player2Y, *player2Sprite);
+                printSprite(player1X, player1Y, *player1Sprite);
             }
-            else if (player2State==ATK_STATE){
-                 printSprite(player1X,player1Y,*player1Sprite);
-                printSprite(player2X,player2Y,*player2Sprite);
-
+            else if (player2State == ATK_STATE)
+            {
+                printSprite(player1X, player1Y, *player1Sprite);
+                printSprite(player2X, player2Y, *player2Sprite);
             }
-            else{
-                 printSprite(player1X,player1Y,*player1Sprite);
-                printSprite(player2X,player2Y,*player2Sprite);
+            else
+            {
+                printSprite(player1X, player1Y, *player1Sprite);
+                printSprite(player2X, player2Y, *player2Sprite);
             }
             if (player1Health <= 0)
             {
@@ -670,14 +695,15 @@ int main()
             timer++;
         }
     }
-    if (player1Score == 3) {
-        addEntryToFile(&head,player1Name);
-    } else if (player2Score == 3) {
-        
-        addEntryToFile(&head,player2Name);
+    if (player1Score == 3)
+    {
+        addEntryToFile(&head, player1Name);
     }
+    else if (player2Score == 3)
+    {
 
- 
+        addEntryToFile(&head, player2Name);
+    }
 
     screenDestroy();
     keyboardDestroy();

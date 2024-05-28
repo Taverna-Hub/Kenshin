@@ -307,6 +307,12 @@ void handleJump(int *playerX, int *playerY, int *jumpHeight, int *jumping, int *
             }
         }
     }
+    if (*playerY > 18) {
+        *playerY = 18;
+        *jumping = 0;
+        *jumpHeight = 0;
+        *state = BASE_STATE;
+    }
     printSprite(*playerX, *playerY, sprite);
 }
 
@@ -332,6 +338,7 @@ void resetPlayers(int *player1X, int *player1Y, int *player2X, int *player2Y, in
 {
     clearSprite(*player1X, *player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
     clearSprite(*player2X, *player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+    
     *player1X = 34;
     *player1Y = 18;
     *player2X = 80;
@@ -538,7 +545,7 @@ int main()
     screenSetColor(WHITE, DARKGRAY);
     screenInit(1);
     keyboardInit();
-    timerInit(180);
+    timerInit(120);
     screenSetColor(WHITE, BLACK);
     grassFloor(2, alturaTela - 3);
     
@@ -571,7 +578,7 @@ int main()
                     player1LastAttackTime = currentTime;
                     player1State = ATK_STATE;
                     updatePlayer(&player1X, &player1Y, 0, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
-                    if (player1X + SPRITE_WIDTH == player2X +2  || player1X == player2X + SPRITE_WIDTH - 2)
+                    if ((player1X + SPRITE_WIDTH == player2X +2  || player1X == player2X + SPRITE_WIDTH - 2)&&player2Y+4>player1Y && player1Y+SPRITE_HEIGHT>player2Y)
                     {
                         player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
                     }
@@ -597,7 +604,7 @@ int main()
                     player2LastAttackTime = currentTime;
                     player2State = ATK_STATE;
                     updatePlayer(&player2X, &player2Y, 0, 0, *player2Sprite, player1X, player1Y, *player1Sprite, player1Jumping);
-                    if (player2X == player1X + SPRITE_WIDTH - 2 || player2X + SPRITE_WIDTH == player1X + 2)
+                    if ((player2X == player1X + SPRITE_WIDTH - 2 || player2X + SPRITE_WIDTH == player1X + 2)&&player1Y+4>player2Y && player2Y+SPRITE_HEIGHT>player1Y)
                     {
                         player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
                     }

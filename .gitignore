@@ -52,5 +52,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# related
 hall_of_fame.txt
 .png
+.jpeg

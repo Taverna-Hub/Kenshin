@@ -37,6 +37,8 @@ O jogo possui 3 "movimentações" principais:
 - Salto: Os jogadores 1 e 2 devem apertar, respectivamente: <b>W</b> e <b>I</b> para saltar.
 - Corrida: Os jogadores 1 e 2 devem apertar, respectivamente: <b>A ou D</b> e <b>J ou L</b> para correr para esquerda ou direita.
 
+Além disso, para os jogadores que conseguirem vencer todos os 3 rounds, seu feito será reconhecido através do Hall of Fame, que pode ser acessado no menu através da tecla <b>H<b>.
+
 # 👥 Equipe:
 <table align="center">
 <tr align="center">

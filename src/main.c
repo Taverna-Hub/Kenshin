@@ -63,7 +63,8 @@ void printSprite(int x, int y, char sprite[SPRITE_HEIGHT][SPRITE_WIDTH + 1])
     }
     screenUpdate();
 }
-int timerGetMilliseconds() {
+int timerGetMilliseconds()
+{
     struct timespec spec;
     clock_gettime(CLOCK_REALTIME, &spec);
     return spec.tv_sec * 1000 + spec.tv_nsec / 10 * 10 * 10 * 10 * 10 * 10;
@@ -310,6 +311,12 @@ void handleJump(int *playerX, int *playerY, int *jumpHeight, int *jumping, int *
             }
         }
     }
+    if (*playerY > 18) {
+        *playerY = 18;
+        *jumping = 0;
+        *jumpHeight = 0;
+        *state = BASE_STATE;
+    }
     printSprite(*playerX, *playerY, sprite);
 }
 
@@ -335,6 +342,7 @@ void resetPlayers(int *player1X, int *player1Y, int *player2X, int *player2Y, in
 {
     clearSprite(*player1X, *player1Y, SPRITE_WIDTH, SPRITE_HEIGHT);
     clearSprite(*player2X, *player2Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+    
     *player1X = 34;
     *player1Y = 18;
     *player2X = 80;
@@ -411,9 +419,32 @@ void displayHallOfFame(struct HallOfFameEntry *head)
     while (temp != NULL)
     {
         screenGotoxy(30, i);
-        printf("%s is a true 人斬", temp->name);
+         printf("%s is a true \033[0;31m人斬\033[0m", temp->name);
         temp = temp->next;
         i++;
+    }
+}
+void enterName(char* playerName, int x, int y) {
+    int ch;
+    int pos = 0;
+
+    screenGotoxy(x, y);
+    printf("%s", playerName);
+
+    while ((ch = getchar()) != '\n' && pos < 49) {
+        if (ch==127) {  
+            if (pos > 0) {
+                playerName[--pos] = '\0';
+                screenGotoxy(x + pos, y);
+                printf(" ");
+                screenGotoxy(x + pos, y);
+            }
+        } else {
+            playerName[pos++] = ch;
+            playerName[pos] = '\0';
+            screenGotoxy(x + pos - 1, y);
+            printf("%c", ch);
+        }
     }
 }
 
@@ -432,15 +463,14 @@ int main()
     char(*player2Sprite)[SPRITE_HEIGHT][SPRITE_WIDTH + 1] = &baseSprite2;
     loadHallOfFame(&head);
     screenInit(0);
-
-    screenHideCursor();
+    
+    
 
     keyboardInit();
 
     system("clear");
     screenSetColor(LIGHTRED, DARKGRAY);
     printf("%s\n", logo);
-
     printf("%s\n\n\n", kenshin);
 
     screenSetColor(LIGHTRED, DARKGRAY);
@@ -450,13 +480,18 @@ int main()
     printf("%s\n", instructions);
     printf("%s\n", openHOF);
 
-    printf("Enter Player 1 Name: \n");
-    scanf("%s", player1Name);
-    printf("Enter Player 2 Name: \n");
-    scanf("%s", player2Name);
-
-    while (ch != 32)
-    {
+    screenShowCursor();
+    screenGotoxy(33,31);
+    printf("Enter Player 1 Name: ");
+    enterName(player1Name, 53, 31);
+    screenGotoxy(33,32);
+    printf("Enter Player 2 Name: ");
+    enterName(player2Name, 53, 32);
+    screenHideCursor();
+    screenGotoxy(33,34);
+    printf("Ready to slaughter...");
+    screenUpdate();
+    while (ch != 32) {
         if (keyhit())
         {
             ch = readch();
@@ -466,7 +501,7 @@ int main()
             menuInstructions = 1;
             break;
         }
-        if (ch == 76 || ch == 108)
+        if (ch == 72 || ch == 104)
         {
             menuHOF = 1;
             break;
@@ -506,7 +541,7 @@ int main()
         screenGotoxy(40, 35);
         printf("Second player's lateral movement: J and L.");
         screenGotoxy(40, 36);
-        printf("Deplete your enemy's life to win.");
+        printf("Deplete your enemy's life to win the round.");
 
         printf("\n\n          %s\n\n", start);
         while (ch != 32)
@@ -520,7 +555,7 @@ int main()
     if (openHOF)
     {
         screenInit(0);
-        screenSetColor(RED, DARKGRAY);
+        screenSetColor(LIGHTGRAY, DARKGRAY);
 
         displayHallOfFame(head);
         printf("\n\n          %s\n\n", start);
@@ -535,7 +570,7 @@ int main()
     screenSetColor(WHITE, DARKGRAY);
     screenInit(1);
     keyboardInit();
-    timerInit(180);
+    timerInit(120);
     screenSetColor(WHITE, BLACK);
     grassFloor(2, alturaTela - 3);
 
@@ -568,7 +603,7 @@ int main()
                     player1LastAttackTime = currentTime;
                     player1State = ATK_STATE;
                     updatePlayer(&player1X, &player1Y, 0, 0, *player1Sprite, player2X, player2Y, *player2Sprite, player2Jumping);
-                    if (player1X + SPRITE_WIDTH == player2X + 2 || player1X == player2X + SPRITE_WIDTH - 2)
+                    if ((player1X + SPRITE_WIDTH == player2X +2  || player1X == player2X + SPRITE_WIDTH - 2)&&player2Y+4>player1Y && player1Y+SPRITE_HEIGHT>player2Y)
                     {
                         player2Health -= (player2State == DF_STATE) ? DF_DMG : ATK_DMG;
                     }
@@ -593,7 +628,7 @@ int main()
                     player2LastAttackTime = currentTime;
                     player2State = ATK_STATE;
                     updatePlayer(&player2X, &player2Y, 0, 0, *player2Sprite, player1X, player1Y, *player1Sprite, player1Jumping);
-                    if (player2X == player1X + SPRITE_WIDTH - 2 || player2X + SPRITE_WIDTH == player1X + 2)
+                    if ((player2X == player1X + SPRITE_WIDTH - 2 || player2X + SPRITE_WIDTH == player1X + 2)&&player1Y+4>player2Y && player2Y+SPRITE_HEIGHT>player1Y)
                     {
                         player1Health -= (player1State == DF_STATE) ? DF_DMG : ATK_DMG;
                     }
@@ -705,6 +740,9 @@ int main()
         addEntryToFile(&head, player2Name);
     }
 
+ 
+
+    screenShowCursor();
     screenDestroy();
     keyboardDestroy();
     timerDestroy();

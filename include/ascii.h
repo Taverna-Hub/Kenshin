@@ -26,5 +26,5 @@ char kenshin[]= "                                           剣心";
 char start[]= "                                  PRESS [ SPACE ] TO FIGHT";
 
 char end[] = "                                 PRESS [ ENTER ] TO EXIT";
-char openHOF[] = "                                 PRESS [L] TO SEE THE HALL OF FAME";
+char openHOF[] = "                                 PRESS [H] TO SEE THE HALL OF FAME";
 char instructions[] = "                                 PRESS [I] FOR INSTRUCTIONS";

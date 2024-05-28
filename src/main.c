@@ -158,15 +158,19 @@ void grassFloor(int x, int y)
     printf("\033[0m");
     screenGotoxy(x, y + 1);
 
-    for (int i = 0; i < 110; i++)
+    for (int i = 1; i < 118; i++)
     {
-        if (i % 73 == 0)
+        for( int j=0; j<12;j++){
+        screenGotoxy(i+1,y+j+1);
+        if (i == 59)
         {
             printf("☠");
         }
         else
         {
-            printf(" ");
+            printf("\033[31m=\033[0m");
+        }
+
         }
     }
 }
@@ -551,10 +555,11 @@ int main()
                 ch = readch();
             }
         }
+        screenDestroy();
     }
     if (openHOF)
     {
-        screenInit(0);
+        screenClear();
         screenSetColor(LIGHTGRAY, DARKGRAY);
 
         displayHallOfFame(head);
@@ -568,6 +573,9 @@ int main()
         }
     }
     screenSetColor(WHITE, DARKGRAY);
+    keyboardDestroy();
+    screenDestroy();
+
     screenInit(1);
     keyboardInit();
     timerInit(120);
@@ -742,10 +750,11 @@ int main()
 
  
 
-    screenShowCursor();
-    screenDestroy();
+    
     keyboardDestroy();
+    screenDestroy();
     timerDestroy();
+    
 
     return 0;
 }

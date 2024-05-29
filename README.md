@@ -1,6 +1,7 @@
-![bannerKenshin](https://github.com/Taverna-Hub/KenshinGame/blob/d3081bff0b3ea50d42e5d123939c9f5c31b0175d/bannerkenshin.jpeg)
+![kenshinbanner](https://github.com/Taverna-Hub/Kenshin/assets/142417782/9f5e855f-8895-4e56-983f-8059258a5526)
 
 <p align="center"><b>Kenshin</b> é um jogo de combate PVP desenvolvido em C.</p>
+
 
 ---
 

@@ -47,7 +47,7 @@ Para os jogadores que conseguirem vencer todos os 3 rounds, seu feito será reco
         <a href="https://github.com/viniciusdandrade">
         <div  
           style="border: 3px solid #7f1d1d; border-radius: 50%; width: 115px; height: 115px; display: flex; align-items: center; justify-content: center;">
-            <img src="" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Vinicius"/>
+            <img src="https://github.com/Taverna-Hub/Kenshin/assets/142417782/d41e1418-b5c0-40c5-9988-3651398cc3e3" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Vinicius"/>
         </div>
             <br />
             <sub style="font-size:14px"><b>Vinicius Andrade</b></sub>
@@ -56,7 +56,7 @@ Para os jogadores que conseguirem vencer todos os 3 rounds, seu feito será reco
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href="https://github.com/n3waz">
             <div style="border: 3px solid #7f1d1d; border-radius: 50%; width: 115px; height: 115px; display: flex; align-items: center; justify-content: center;">
-              <img src="" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Kato"/>
+              <img src="https://github.com/Taverna-Hub/Kenshin/assets/142417782/5bd85e3f-607b-4e32-94c4-9dd4e7d278d2" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Kato"/>
             </div>
             <br />
             <sub style="font-size:14px;"><b>Luan Kato</b></sub>
@@ -66,7 +66,7 @@ Para os jogadores que conseguirem vencer todos os 3 rounds, seu feito será reco
         <a href="https://github.com/ViniciusFreitas2801">
         <div  
           style="border: 3px solid #7f1d1d; border-radius: 50%; width: 115px; height: 115px; display: flex; align-items: center; justify-content: center;">
-            <img src="" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Cookie"/>
+            <img src="https://github.com/Taverna-Hub/Kenshin/assets/142417782/2dccc3d4-55f9-404a-9687-e54ae2fa70fd" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Cookie"/>
         </div>
             <br />
             <sub style="font-size:14px"><b>Vinicius Freitas</b></sub>

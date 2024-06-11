@@ -62,16 +62,7 @@ Para os jogadores que conseguirem vencer todos os 3 rounds, seu feito será reco
             <sub style="font-size:14px;"><b>Luan Kato</b></sub>
         </a>
     </td>
-    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href="https://github.com/ViniciusFreitas2801">
-        <div  
-          style="border: 3px solid #7f1d1d; border-radius: 50%; width: 115px; height: 115px; display: flex; align-items: center; justify-content: center;">
-            <img src="https://github.com/Taverna-Hub/Kenshin/assets/142417782/2dccc3d4-55f9-404a-9687-e54ae2fa70fd" style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden; width: 150px; " alt="Cookie"/>
-        </div>
-            <br />
-            <sub style="font-size:14px"><b>Vinicius Freitas</b></sub>
-        </a>
-    </td>
+    
 </tr>
 </table>
 
